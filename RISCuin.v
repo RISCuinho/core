@@ -26,7 +26,7 @@ initial begin
 end
 
 wire reg_w;
-wire [4:0] rd_sel, rs1_sel, rs2_sel;
+wire [4:0] rd_sel, rs1_sel_zimm, rs2_sel;
 wire [1:0] rd_data_sel;
 wire [31:0] rs1_data, rs2_data, alu_out;
 
@@ -35,18 +35,18 @@ wire [1:0]  to_size, from_size;
 wire [15:0] alu_op;
 
 wire imm_rs2_sel;
-wire [31:0] imm;
+wire [31:0] imm_csr;
 
 wire [31:0] alu_A       = branch ? pc : rs1_data;
-wire [31:0] alu_B       = imm_rs2_sel ? imm : rs2_data;
+wire [31:0] alu_B       = imm_rs2_sel ? imm_csr : rs2_data;
 
 //   00 -> alu
 //   01 -> bus
-//   10 -> imm
+//   10 -> imm_csr
 //   11 -> pc + 4
 wire [31:0] rd_data     = rd_data_sel == 2'b00 ? alu_out : 
                           rd_data_sel == 2'b01 ? data_out: 
-                          rd_data_sel == 2'b10 ? imm: 
+                          rd_data_sel == 2'b10 ? imm_csr: 
                           rd_data_sel == 2'b11 ? pc_plus: 
                                                  32'bx;
 
@@ -85,11 +85,11 @@ ProgramMemory #(.INSTR_ADDR_WIDTH(`INSTR_ADDR_WIDTH))
  */
 IntegerBasicInstructionDecoder ib_id(.instr(instr), .full_op_code(alu_op), 
                         .alu_sel(alu_sel), .jump(branch),
-                        .rs1_sel(rs1_sel), .rs2_sel(rs2_sel), .rd_sel(rd_sel), 
+                        .rs1_sel_zimm(rs1_sel_zimm), .rs2_sel(rs2_sel), .rd_sel(rd_sel), 
                         .rd_data_sel(rd_data_sel),
                         .reg_w(reg_w),
                         .imm_rs2_sel(imm_rs2_sel),
-                        .imm(imm),
+                        .imm_csr(imm_csr),
                         .mem_w(mem_w), .mem_r(mem_r),
                         .mem_size(mem_size), .unsigned_value(unsigned_value)
                      );
@@ -97,7 +97,7 @@ IntegerBasicInstructionDecoder ib_id(.instr(instr), .full_op_code(alu_op),
    Banco de Registradores
  */                     
 RegisterBank rb(.clk(clk), .rst(rst), .ready(rb_ready), 
-                  .rs1_sel(rs1_sel), .rs2_sel(rs2_sel), .rd_sel(rd_sel), .reg_w(reg_w),
+                  .rs1_sel(rs1_sel_zimm), .rs2_sel(rs2_sel), .rd_sel(rd_sel), .reg_w(reg_w),
                   .rs1_data(rs1_data), .rs2_data(rs2_data), .rd_data(rd_data));
 
 
@@ -135,7 +135,7 @@ wire cso_e = 1'b1;
 ControlSistemOperation cso(
    E(cso_e),
    instr(instr),
-   .rd_sel(rd_sel), .rs1_sel(.rs1_sel),
+   .rd_sel(rd_sel), .rs1_sel_zimm(.rs1_sel_zimm),
    .rd_data(rd_data), .rs1_data(.rs1_data)
 );
 `endif 
@@ -147,10 +147,10 @@ ControlSistemOperation cso(
 `ifdef __ICARUS__
 IVerilogInstructionTable iverilog_it(
                         .instr(instr), .full_op_code(alu_op), 
-                        .rs1_sel(rs1_sel), .rs2_sel(rs2_sel), .rd_sel(rd_sel), 
+                        .rs1_sel_zimm(rs1_sel_zimm), .rs2_sel(rs2_sel), .rd_sel(rd_sel), 
                         .rd_data_sel(rd_data_sel),
                         .rs1_data(rs1_data), .rs2_data(rs2_data), .rd_data(rd_data),
-                        .imm(imm)
+                        .imm_csr(imm_csr)
                         );
 `endif
 endmodule

@@ -8,12 +8,10 @@ module IntegerBasicInstructionDecoder (
 
    output [ 1:0] rd_data_sel, 
 
-   output [ 4:0] rs1_sel,
-   output [ 4:0] rs2_sel, // quando instrução control usar como zimm 
-//   output [ 4:0] zimm,
+   output [ 4:0] rs1_sel_zimm, // control usa como zimm 
+   output [ 4:0] rs2_sel, 
    output [ 4:0] rd_sel,
-   output [31:0] imm, // quando instrução do control usar os 12 primeiros bits para csr
-//   output [ 6:0] csr,
+   output [31:0] imm_csr, // control usa os 12 primeiros bits para csr
    output        imm_rs2_sel,
    output        reg_w,
    output        mem_w, mem_r, unsigned_value,
@@ -143,7 +141,7 @@ assign rd_sel       = TYPE_I || TYPE_IL ||
                       TYPE_U || TYPE_J || TYPE_R                     ? instr[11:7] : 
                       5'bx;
 
-assign rs1_sel      = CSRRW  || CSRRS  || CSRRC ||
+assign rs1_sel_zimm = CSRRW  || CSRRS  || CSRRC ||
                       (TYPE_I && !(CONTROL || SYNCH || SYSTEM)) ||
                       TYPE_B || TYPE_S || TYPE_R                     ? instr[19:15] : 
                       5'bx;

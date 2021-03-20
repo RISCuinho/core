@@ -2,16 +2,23 @@
 //# https://www.kvakil.me/venus/
 //# Video tutorial: https://www.vicilogic.com/vicilearn/run_step/?s_id=1452
 //
-//# assembly program            # Notes  (default imm format is decimal 0d)
-//main:
-//addi x3, x3, 5                # x3 = x3 + 5        
-//addi x3, x3, 5                # x3 = x3 + 5        
-//addi x3, x3, 5                # x3 = x3 + 5        
+// # setup base address and x10 register data to write to memory
+// addi x2,x0,0xf4    # assign memory base address = 0xf4
+// lui  x10,0xfeedc   # x10 = 0xfeedc000
+// addi x10,x10,0x0de # x10 = data value A = 0xfeedc0de
+//
+// # store register to memory mem(base address + offset); word (32-bit), half-word (16-bit), byte (8-bit)
+// sw x10, 0x8(x2)    # Store A(31:0), word,      in mem(0xfc), i.e, base byte address + 8, i.e, mem(0xfc)
+//
+// # load from mem(x2); word (32-bit), half-word (16-bit), byte (8-bit), signed (default)/unsigned
+// lw  x11,8(x2)      # load mem(0xfc)(31:0), word,               to register x11
+// 
+// 1b: jal zero,1b   	# repeat the NOP instruction, recommended rather than 1b: beq x0,x0,1b	
 //
 //   0         1        2        3
 // 3 2 1 0  3 2 1 0  3 2 1 0  3 2 1 0
-  10518193 20518193 30518193 00000000
-  00000000 00000000 00000000 00000000
+  0f400113 feedc537 0de50513 00a12423
+  00812583 0000006f 00000000 00000000
   00000000 00000000 00000000 00000000
   00000000 00000000 00000000 00000000
   00000000 00000000 00000000 00000000
