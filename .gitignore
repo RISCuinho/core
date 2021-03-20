@@ -1,0 +1,14 @@
+*.bck
+*.bak
+*.vcd
+~*
+xt2
+
+RISCUIN_Quartus.*
+!RISCUIN_Quartus.htm
+!RISCUIN_Quartus.qpf
+!RISCUIN_Quartus.qsf
+!RISCUIN_Quartus.sdc
+!RISCUIN_Quartus.v
+db/
+incremental_db/
