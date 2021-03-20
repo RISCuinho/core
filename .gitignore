@@ -44,3 +44,13 @@ incremental_db/
 *.exe
 *.out
 *.app
+
+serv_req_info.txt
+
+# Outros arquivos a serem temporáriamente ignorados por hora
+*Quartus*
+*.blif
+*.dot
+*.gtkw
+*.json
+*.png
