@@ -50,3 +50,7 @@ Placa de prototipação e estudos da Terasic.
 Estou usando a De0-nano versão 1.6:
 
  * FPGA: Altera Cyclone IV EP4CE22FE22F17C6N
+
+## Aprendendo e Tirando Dúvidas ao Vivo
+
+Como estou apredendo não posso tirar muitas dúvidas sobre Verilog ou sobre Risc-V, mas aprendi que a melhor forma de aprender é tirar dúvidas, é um paradoxo, então vamos lá, criei um canal no Twitch para isso, assim caso queira perguntar algo ou participar ao vivo neste projeto entre no canal e poste sua dúvida, se eu não souber vou pesquisar, assim aprendo mais e te ajudo a aprender também. [https://twitch.tv/calrosdelfino_tv](https://twitch.tv/calrosdelfino_tv) ou [https://twitch.tv/arduinominas](https://twitch.tv/arduinominas)
