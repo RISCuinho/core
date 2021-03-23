@@ -9,11 +9,10 @@ module IntegerBasicInstructionDecoder (
    output [ 1:0] rd_data_sel, 
 
    output [ 4:0] rs1_sel,
-   output [ 4:0] rs2_sel, // quando instrução control usar como zimm 
-//   output [ 4:0] zimm,
+   output [ 4:0] rs2_sel,
    output [ 4:0] rd_sel,
-   output [31:0] imm, // quando instrução do control usar os 12 primeiros bits para csr
-//   output [ 6:0] csr,
+   
+   output [31:0] imm,
    output        imm_rs2_sel,
    output        reg_w,
    output        mem_w, mem_r, unsigned_value,
@@ -26,19 +25,15 @@ initial begin
 //0000000 00000 00001 100 00011 0000011
 wire [ 6:0] code    = instr[6:0];
 wire [ 2:0] FN3     = instr[14:12];
-wire [ 3:0] FN4_A   = instr[31:28];
-wire [ 3:0] FN4_B   = instr[27:24];
-wire [ 3:0] FN4_C   = instr[23:20];
 wire [ 4:0] FN5     = instr[11:7];
 wire [ 6:0] FN7     = instr[31:25];
 wire [11:0] FN12    = instr[31:20];
                
 wire TYPE_IF  = code == 7'b0001111;
-wire TYPE_IC  = code == 7'b1110011;
 wire TYPE_IJ  = code == 7'b1100111;
 wire TYPE_IL  = code == 7'b0000011;
 wire TYPE_IA  = code == 7'b0010011;
-wire TYPE_I   = TYPE_IA || TYPE_IL || TYPE_IC || TYPE_IF | TYPE_IJ;
+wire TYPE_I   = TYPE_IA || TYPE_IL || TYPE_IF | TYPE_IJ;
 wire TYPE_S   = code == 7'b0100011;
 wire TYPE_R   = code == 7'b0110011;
 wire TYPE_U   = code == 7'b0110111 || code == 7'b0010111;
@@ -90,26 +85,6 @@ wire SRA     = TYPE_R && FN3 == 3'b101 && FN7 == 7'b0100000;
 wire OR      = TYPE_R && FN3 == 3'b110 && FN7 == 7'b0000000;
 wire AND     = TYPE_R && FN3 == 3'b111 && FN7 == 7'b0000000;
 
-wire FENCE   = TYPE_IF && FN3 == 3'b000 && FN5 == 5'b00000 && 
-               FN4_A == 4'b0000;
-wire FENCE_I = TYPE_IF && FN3 == 3'b001 && FN5 == 5'b00000 && 
-               FN4_A == 4'b0000 && FN4_B == 4'b0000 && FN4_C == 4'b0000;
-wire ECAL    = TYPE_IC && FN3 == 3'b000 && FN5 == 5'b00000 &&
-               FN12 == 12'b00000000000;
-wire EBREAK  = TYPE_IC && FN3 == 3'b000 && FN5 == 5'b00000 &&
-               FN12 == 12'b00000000001;
-
-wire CSRRW    = TYPE_IC && FN3 == 3'b001;
-wire CSRRS    = TYPE_IC && FN3 == 3'b010;
-wire CSRRC    = TYPE_IC && FN3 == 3'b011;
-wire CSRRWI   = TYPE_IC && FN3 == 3'b101;
-wire CSRRSI   = TYPE_IC && FN3 == 3'b110;
-wire CSRRCI   = TYPE_IC && FN3 == 3'b111;
-
-wire SYNCH   = FENCE || FENCE_I;
-wire SYSTEM  = ECAL || EBREAK;
-wire CONTROL = CSRRW || CSRRS || CSRRC || CSRRWI || CSRRSI || CSRRCI;
-
 wire [11:0] imm_I   = instr[31:20];
 wire [19:0] imm_U   = instr[31:12];   
 wire [11:0] imm_S   = {instr[31:25], instr[11:7]};   
@@ -119,16 +94,12 @@ wire [20:0] imm_J   = {instr[31:31], instr[19:12], instr[20:20], instr[30:21]};
 wire [ 4:0] shamt   = instr[24:20];
 
 assign imm          = SLLI || SRLI || SRAI ? {    27'b0      ,  shamt} :
-                      (TYPE_I && !(SYNCH || SYSTEM || CONTROL)) // quando control imm se torna CSR
-                                           ? {{20{imm_I[11]}},  imm_I        }  : 
+                      TYPE_I               ? {{20{imm_I[11]}},  imm_I        }  : 
                       TYPE_B               ? {{19{imm_B[12]}},  imm_B, {1'b0}}  : 
                       TYPE_S               ? {{19{imm_S[11]}},  imm_S        }  : 
                       TYPE_J               ? {{11{imm_J[20]}},  imm_J, {1'b0}}  : 
                       TYPE_U               ? {    imm_U      ,  {12'b0}      }  : 
                       32'bx;
-
-//assign zimm         = CONTROL && (CSRRWI || CSRRSI || CSRRCI) ? {instr[24:20]} : 5'bx;
-//assign csr          = CONTROL ? {instr[31:20]} : 12'bx;
 
 assign full_op_code = SLLI || SRLI || SRAI || 
                       TYPE_R               ? {FN7 ,  FN3, code}  :
@@ -143,8 +114,7 @@ assign rd_sel       = TYPE_I || TYPE_IL ||
                       TYPE_U || TYPE_J || TYPE_R                     ? instr[11:7] : 
                       5'bx;
 
-assign rs1_sel      = CSRRW  || CSRRS  || CSRRC ||
-                      (TYPE_I && !(CONTROL || SYNCH || SYSTEM)) ||
+assign rs1_sel      = TYPE_I                    ||
                       TYPE_B || TYPE_S || TYPE_R                     ? instr[19:15] : 
                       5'bx;
 assign rs2_sel      = TYPE_B || TYPE_S || TYPE_R                     ? instr[24:20] : 
@@ -184,8 +154,7 @@ assign rd_data_sel = SLTI || SLTIU || SLT ? 2'b00 :
 assign reg_w        = LB  || LH  || LW || 
                       LBU || LHU ||
                       TYPE_U || TYPE_J || TYPE_R ||
-                      (TYPE_I && 
-                           !(SYNCH || SYSTEM || CONTROL));
+                      TYPE_I ;
 
 
 /*
@@ -196,7 +165,7 @@ assign reg_w        = LB  || LH  || LW ||
  */
 assign mem_size     = FN3[1:0]; 
 
-assign unsigned_value = LBU || LHU || SLTIU;
+assign unsigned_value = LBU || LHU || SLTIU; // no caso LBU e LHU fn3 tem o bit 2 igual a 1
 
 assign jump = TYPE_J || AUIPC;
 

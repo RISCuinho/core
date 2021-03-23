@@ -49,6 +49,9 @@ wire [31:0] rd_data     = rd_data_sel == 2'b00 ? alu_out :
                           rd_data_sel == 2'b10 ? imm: 
                           rd_data_sel == 2'b11 ? pc_plus: 
                                                  32'bx;
+// Gerenciamento de acesso a memória de dados
+// as exceptions abaixo serão usadas futuramente
+// wire address-misaligned, access-fault;
 
 wire [`MEM_DATA_ADDR_WIDTH-1:0] data_addr_in = alu_out[`MEM_DATA_ADDR_WIDTH-1:0];
 wire [`MEM_DATA_ADDR_WIDTH-1:0] data_addr_out = alu_out[`MEM_DATA_ADDR_WIDTH-1:0];
@@ -114,9 +117,14 @@ IntegerBasicALU #(.DATA_WIDTH(`INTERNAL_DATA_WIDTH)) ib_alu(
 
 /* ########
    Barramento de Dados e Dispositivos de Entrada e Saida de propósito geral
+   O DataBusControl é responsável por gerenciar o acesso a memória de dados 
+   e a dispositivos externos,
+   Mesmo qe estejam hieraquicamente acima acima do módulo RISCuinho, 
+   já que é ele que verifica se é permitido o acesso ao endereço socilitado, 
+   emitindo uma exeção e gravando nos registradores de estados proprietários 
+   criados por mim.
  */
-DataBusControl #(.ADDR_WIDTH(`MEM_DATA_ADDR_WIDTH), .DATA_WIDTH(`MEM_DATA_WIDTH)) 
-                     data_m_ctl(.clk(clk), 
+DataBusControl data_m_ctl(.clk(clk), 
                            .ready(mem_ready),
                            .wd(mem_w), .rd(mem_r),
                            .to_size(mem_size), .from_size(mem_size),
@@ -146,6 +154,8 @@ ControlSistemOperation cso(
  */
 `ifdef __ICARUS__
 IVerilogInstructionTable iverilog_it(
+                        .rst(local_rst),
+                        .clk(clk),
                         .instr(instr), .full_op_code(alu_op), 
                         .rs1_sel(rs1_sel), .rs2_sel(rs2_sel), .rd_sel(rd_sel), 
                         .rd_data_sel(rd_data_sel),

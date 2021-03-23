@@ -1,3 +1,16 @@
+verilator/
+teste.cpp
+prog_128.hex
+prog_256.hex
+prog_128.hex
+prog_32.StoreLoadEx1.hex
+prog_32.store.load.instructions.hex
+prog_64.hex
+teste.cpp
+main.cpp
+CMakeLists.txt
+docs
+
 *.bck
 *.bak
 *.vcd
