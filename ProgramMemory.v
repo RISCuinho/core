@@ -4,7 +4,7 @@ module ProgramMemory #(
 ) (
    input                                  clk,
    input       [INSTR_ADDR_WIDTH-1:0]     pc,
-   output reg  [(STEP*8)-1:0]             instr,
+   output      [(STEP*8)-1:0]             instr,
    // a memória pode ser grava em circunstãncias especiais
    input                                  pgm,
    input       [INSTR_ADDR_WIDTH-1:0]     addr,
@@ -33,8 +33,8 @@ module ProgramMemory #(
          $readmemh("./prog_254.hex", memory); // carrega um programa de referência   
    end
 
+   assign instr = memory[pc];  
    always @(posedge clk) begin
-      instr <= memory[pc];  
       if(pgm) memory[addr] <= data;
    end
 

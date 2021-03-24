@@ -62,7 +62,8 @@ localparam OR      = {7'b0000000, 3'b110, TYPE_R      }; // b0000-0110-0011-0011
 localparam AND     = {7'b0000000, 3'b111, TYPE_R      }; // b0000-0111-0011-0011  h0733
 
 
-wire local_branch = alu_op == BEQ    ?         A == B :
+wire local_branch = !E           ?  1'b0          :
+                alu_op == BEQ    ?         A == B :
                 alu_op == BNE    ?         A != B :
                 alu_op == BLT    ? $signed(A) <  $signed(B) :
                 alu_op == BGE    ? $signed(A) >  $signed(B) :
@@ -71,7 +72,7 @@ wire local_branch = alu_op == BEQ    ?         A == B :
                                    1'b0;
 assign branch = local_branch === 1'bx ? 0 : local_branch;
 
-assign out = !E               ? {DATA_WIDTH{1'bx}}  :
+assign out = !E               ? {DATA_WIDTH{1'b0}}  :
              alu_op == BEQ    ||
              alu_op == BNE    ||
              alu_op == BLT    ||
@@ -114,7 +115,7 @@ assign out = !E               ? {DATA_WIDTH{1'bx}}  :
              alu_op == XOR   ||
              alu_op == XORI   ? A ^ B                  :
 
-                               {DATA_WIDTH{1'bx}}; 
+                               {DATA_WIDTH{1'b0}}; 
 
 
 endmodule

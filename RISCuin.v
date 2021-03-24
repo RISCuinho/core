@@ -108,7 +108,7 @@ RegisterBank rb(.clk(clk), .rst(rst), .ready(rb_ready),
    Unidade Lógica Aritimética para Inteiros, Unidade Básica do RV32I
  */
 IntegerBasicALU #(.DATA_WIDTH(`INTERNAL_DATA_WIDTH)) ib_alu(
-   .E(alu_sel),
+   .E(alu_sel && !local_rst),
    .alu_op(alu_op),
    .A(alu_A), .B(alu_B),
    .out(alu_out),
