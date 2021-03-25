@@ -16,6 +16,12 @@ docs
 *.vcd
 ~*
 xt2
+OBS
+*.MTI
+*.MPF
+build/
+transcript
+work/
 
 RISCUIN_Quartus.*
 !RISCUIN_Quartus.htm
