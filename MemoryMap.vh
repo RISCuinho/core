@@ -2,6 +2,8 @@
 `define DBC_RAM_START          							8'h00000000
 `define DBC_RAM_END            							8'h0000FFFF
 `define DBC_RAM_SIZE											65535
+`define DBC_RAM_ADDR_WIDTH                         16
+
 /*
 https://github.com/DuinOS/riscuinho/wiki/DataBusControlRegister
 32 BITS (UMA WORD)
@@ -17,11 +19,13 @@ https://github.com/DuinOS/riscuinho/wiki/DataBusControlRegister
 
 `define DBC_REGISTER_MISALIGNED_EXCEPTION_ADDR	8'h01000000
 `define DBC_REGISTER_MISALIGNED_EXCEPTION_BIT	1'h1
+`define DBC_REGISTER_MISALIGNED_EXCEPTION_START_BIT 1'h0   // bit 1
 
 `define DBC_REGISTER_EMPTY_ADDR_EXCPETION_ADDR	8'h01000000
 `define DBC_REGISTER_EMPTY_ADDR_EXCEPTION_BIT	1'h1
+`define DBC_REGISTER_EMPTY_ADDR_EXCEPTION_START_BIT 1'h7   // bit 1
 
-`define DBC_REGISTER_LAST_DATA_SIZE_ADDR			8'h01000000
-`define DBC_REGISTER_DATA_SIZE_BITS					1'b3   
-`define DBC_REGISTER_DATA_SIZE_START_BIT			1'h1   // bit 1
-`define DBC_REGISTER_DATA_SIZE_END_BIT				1'h2
+`define DBC_REGISTER_LAST_DATA_ADDR             8'h01000004
+`define DBC_REGISTER_LAST_DATA_BITS					128   
+`define DBC_REGISTER_LAST_DATA_START_BIT			0   // bit 1
+`define DBC_REGISTER_LAST_DATA_END_BIT				127

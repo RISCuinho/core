@@ -1,19 +1,20 @@
 `include "./config.vh"
+`include "./MemoryMap.vh"
 
 module RISCuin(
    input clk, rst, 
    output pc_end);
 
-wire rb_ready, alu_sel, mem_ready, mem_w, mem_r, unsigned_value;
+wire rb_ready, alu_sel, bus_ready, bus_w, bus_r, unsigned_value;
 
-wire [1:0] mem_size;
+wire [1:0] bus_size;
 
 wire local_rst = rst | ~rb_ready;
 
 wire [`INSTR_ADDR_WIDTH-1:0] pc, pc_plus, pc_next;
 wire [`INSTR_ADDR_WIDTH-1:0] pc_branch =  alu_out[`INSTR_ADDR_WIDTH-1:0];
 wire [`INSTR_ADDR_WIDTH+1:0] pc_ext = {pc,2'b00};
-wire pc_enable = !rst && mem_ready && rb_ready && !pc_end;
+wire pc_enable = !rst && bus_ready && rb_ready && !pc_end;
 
 wire branch;
 
@@ -30,7 +31,7 @@ wire [4:0] rd_sel, rs1_sel, rs2_sel;
 wire [1:0] rd_data_sel;
 wire [31:0] rs1_data, rs2_data, alu_out;
 
-wire [1:0]  to_size, from_size;
+wire [1:0]  size_in, size_out;
 
 wire [15:0] alu_op;
 
@@ -41,7 +42,7 @@ wire [31:0] alu_A       = branch ? pc : rs1_data;
 wire [31:0] alu_B       = imm_rs2_sel ? imm : rs2_data;
 
 //   00 -> alu
-//   01 -> bus
+//   01 -> bus (data_out)
 //   10 -> imm
 //   11 -> pc + 4
 wire [31:0] rd_data     = rd_data_sel == 2'b00 ? alu_out : 
@@ -53,9 +54,11 @@ wire [31:0] rd_data     = rd_data_sel == 2'b00 ? alu_out :
 // as exceptions abaixo serão usadas futuramente
 // wire address-misaligned, access-fault;
 
-wire [`MEM_DATA_ADDR_WIDTH-1:0] data_addr_in = alu_out[`MEM_DATA_ADDR_WIDTH-1:0];
-wire [`MEM_DATA_ADDR_WIDTH-1:0] data_addr_out = alu_out[`MEM_DATA_ADDR_WIDTH-1:0];
-wire [`MEM_DATA_WIDTH-1     :0] data_in, data_out;
+wire [`DBC_RAM_ADDR_WIDTH-1:0] data_addr_in = alu_out[`DBC_RAM_ADDR_WIDTH-1:0];
+wire [`DBC_RAM_ADDR_WIDTH-1:0] data_addr_out = alu_out[`DBC_RAM_ADDR_WIDTH-1:0];
+wire [31:0] data_in, data_out;
+
+assign data_in = rs2_data;
 
 /* #########
    Unidade que controla o contador de programa.
@@ -93,8 +96,8 @@ IntegerBasicInstructionDecoder ib_id(.instr(instr), .full_op_code(alu_op),
                         .reg_w(reg_w),
                         .imm_rs2_sel(imm_rs2_sel),
                         .imm(imm),
-                        .mem_w(mem_w), .mem_r(mem_r),
-                        .mem_size(mem_size), .unsigned_value(unsigned_value)
+                        .data_w(bus_w), .data_r(bus_r),
+                        .data_size(bus_size), .unsigned_value(unsigned_value)
                      );
 /* #######
    Banco de Registradores
@@ -124,13 +127,15 @@ IntegerBasicALU #(.DATA_WIDTH(`INTERNAL_DATA_WIDTH)) ib_alu(
    emitindo uma exeção e gravando nos registradores de estados proprietários 
    criados por mim.
  */
-DataBusControl data_m_ctl(.clk(clk), 
-                           .ready(mem_ready),
-                           .wd(mem_w), .rd(mem_r),
-                           .to_size(mem_size), .from_size(mem_size),
-                           .unsigned_value(unsigned_value), 
-                           .addr_in(addr_in), .addr_out(addr_out),
-                           .data_in(data_in), .data_out(data_out));
+DataBusControl data_m_ctl(
+                        .rst(local_rst),
+                        .clk(clk), 
+                        .ready(bus_ready),
+                        .wd(bus_w), .rd(bus_r),
+                        .size_in(bus_size), .size_out(bus_size),
+                        .unsigned_value(unsigned_value), 
+                        .addr_in(data_addr_in), .addr_out(data_addr_out),
+                        .data_in(data_in), .data_out(data_out));
 
 
 /* ########

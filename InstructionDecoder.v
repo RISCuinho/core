@@ -15,8 +15,8 @@ module IntegerBasicInstructionDecoder (
    output [31:0] imm,
    output        imm_rs2_sel,
    output        reg_w,
-   output        mem_w, mem_r, unsigned_value,
-   output [ 1:0] mem_size
+   output        data_w, data_r, unsigned_value,
+   output [ 1:0] data_size
 );
 initial begin
    $display("Instruction Decoder");
@@ -120,14 +120,16 @@ assign rs1_sel      = TYPE_I                    ||
 assign rs2_sel      = TYPE_B || TYPE_S || TYPE_R                     ? instr[24:20] : 
                       5'bx;
 
-assign imm_rs2_sel  = TYPE_I;
+assign imm_rs2_sel  = TYPE_I || TYPE_S;
 
 // Indica se ativa ou não a ALU
 // quais instruções fazem uso da ALU?
 // apenas ativa se for uma das instruções que usam a ALU, as demais ignora
 assign alu_sel      =   ADDI || ADD   ||
                         SLTI || SLTIU || SLT  || 
-                        LBU  ||
+                        LBU  || LHU   ||
+                        LB   || LH    || LW   ||
+                        SB   || SH    || SW   ||
                         SUB  ||
                         XORI || ORI   || OR   ||
                         ANDI || AND   ||
@@ -139,7 +141,7 @@ assign alu_sel      =   ADDI || ADD   ||
    Seleciona quem será a fonte de rd_data.
 
    00 -> alu
-   01 -> bus
+   01 -> bus (data_out)
    10 -> imm
    11 -> pc + 4
  */
@@ -163,7 +165,9 @@ assign reg_w        = LB  || LH  || LW ||
    01 -> 16bits 
    10 -> 32bits 
  */
-assign mem_size     = FN3[1:0]; 
+assign data_size     = FN3[1:0]; 
+
+assign data_w        = TYPE_S;
 
 assign unsigned_value = LBU || LHU || SLTIU; // no caso LBU e LHU fn3 tem o bit 2 igual a 1
 
