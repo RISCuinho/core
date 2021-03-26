@@ -35,7 +35,7 @@ assign data_out = dbc_register_addrs                                    ? // end
 						local_data_out                                       ;  // outro dado endereçado
 						
 assign local_data_out = (!rst && ready && !busy && ram_addrs && rd)  ?
-                       size_out == 2'b00 ? {24'b0, memory[addr_out][ 8:0]} :
+                       size_out == 2'b00 ? {24'b0, memory[addr_out][ 7:0]} :
                        size_out == 2'b01 ? {16'b0, memory[addr_out][15:0]} :
                        size_out == 2'b10 ? memory[addr_out] : 32'b0 : 
                        32'b0;
