@@ -14,7 +14,7 @@ wire local_rst = rst | ~rb_ready;
 wire [`INSTR_ADDR_WIDTH-1:0] pc, pc_plus, pc_next;
 wire [`INSTR_ADDR_WIDTH-1:0] pc_branch =  alu_out[`INSTR_ADDR_WIDTH-1:0];
 wire [`INSTR_ADDR_WIDTH+1:0] pc_ext = {pc,2'b00};
-wire pc_enable = !rst && bus_ready && rb_ready && !pc_end;
+wire pc_enable = !rst && bus_ready && rb_ready && !pc_end && !bus_busy;
 
 wire branch;
 
@@ -42,11 +42,11 @@ wire [31:0] alu_A       = branch ? pc : rs1_data;
 wire [31:0] alu_B       = imm_rs2_sel ? imm : rs2_data;
 
 //   00 -> alu
-//   01 -> bus (data_out)
+//   01 -> bus (data_eei é o dado processado do barramento)
 //   10 -> imm
 //   11 -> pc + 4
 wire [31:0] rd_data     = rd_data_sel == 2'b00 ? alu_out : 
-                          rd_data_sel == 2'b01 ? data_out: 
+                          rd_data_sel == 2'b01 ? data_eei: 
                           rd_data_sel == 2'b10 ? imm: 
                           rd_data_sel == 2'b11 ? pc_plus: 
                                                  32'bx;
@@ -56,9 +56,19 @@ wire [31:0] rd_data     = rd_data_sel == 2'b00 ? alu_out :
 
 wire [`DBC_RAM_ADDR_WIDTH-1:0] data_addr_in = alu_out[`DBC_RAM_ADDR_WIDTH-1:0];
 wire [`DBC_RAM_ADDR_WIDTH-1:0] data_addr_out = alu_out[`DBC_RAM_ADDR_WIDTH-1:0];
-wire [31:0] data_in, data_out;
+wire [31:0] data_in, data_out, data_eei;
 
 assign data_in = rs2_data;
+
+
+/*#########
+ Determina se o dado deve ser extendido com ou sem sinal
+ */
+assign data_eei = !unsigned_value    ? 
+                  size_out == 2'b00 ? {{24{data_out[ 7]}},data_out[ 7:0]} :
+                  size_out == 2'b01 ? {{16{data_out[15]}},data_out[15:0]} :
+                  data_out:data_out;
+
 
 /* #########
    Unidade que controla o contador de programa.
@@ -78,6 +88,7 @@ ProgramCountControlUnit #(.INSTR_ADDR_WIDTH(`INSTR_ADDR_WIDTH))
                           .pc(pc), .pc_plus(pc_plus), .pc_branch(pc_branch), .pc_next(pc_next),
                           .pc_end(pc_end)
                          );
+
 /* #########
    Memória de programa
    Este core usa Arquitetura Havard
@@ -130,10 +141,9 @@ IntegerBasicALU #(.DATA_WIDTH(`INTERNAL_DATA_WIDTH)) ib_alu(
 DataBusControl data_m_ctl(
                         .rst(local_rst),
                         .clk(clk), 
-                        .ready(bus_ready),
+                        .ready(bus_ready), .busy(bus_busy),
                         .wd(bus_w), .rd(bus_r),
                         .size_in(bus_size), .size_out(bus_size),
-                        .unsigned_value(unsigned_value), 
                         .addr_in(data_addr_in), .addr_out(data_addr_out),
                         .data_in(data_in), .data_out(data_out));
 

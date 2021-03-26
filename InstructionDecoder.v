@@ -168,6 +168,7 @@ assign reg_w        = LB  || LH  || LW ||
 assign data_size     = FN3[1:0]; 
 
 assign data_w        = TYPE_S;
+assign data_r        = TYPE_IL;
 
 assign unsigned_value = LBU || LHU || SLTIU; // no caso LBU e LHU fn3 tem o bit 2 igual a 1
 

@@ -8,6 +8,7 @@
 `endif 
 
 `ifdef SIMULATOR
+`define DBC_USE_BUSY FALSE
 `define MEM_DATA_ADDR_WIDTH 10
 `define MEM_DATA_WIDTH 32
 `define INTERNAL_DATA_WIDTH 32 
