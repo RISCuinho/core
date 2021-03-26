@@ -20,6 +20,7 @@ module RISCuin_tb;
 		#00000 $display("Iniciado!");
 		$dumpfile("RISCuin.vcd");
 		$dumpvars;
+		#01000 $finish;
 	 end
 
 	wire  pc_end;
