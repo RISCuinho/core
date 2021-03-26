@@ -5,26 +5,13 @@ module RISCuin(
    input clk, rst, 
    output pc_end);
 
-wire rb_ready, alu_sel, bus_ready, bus_w, bus_r, unsigned_value;
+wire rb_ready, alu_sel, bus_ready, bus_w, bus_r, bus_busy, unsigned_value;
 
 wire [1:0] bus_size;
 
 wire local_rst = rst | ~rb_ready;
 
-wire [`INSTR_ADDR_WIDTH-1:0] pc, pc_plus, pc_next;
-wire [`INSTR_ADDR_WIDTH-1:0] pc_branch =  alu_out[`INSTR_ADDR_WIDTH-1:0];
-wire [`INSTR_ADDR_WIDTH+1:0] pc_ext = {pc,2'b00};
-wire pc_enable = !rst && bus_ready && rb_ready && !pc_end && !bus_busy;
-
 wire branch;
-
-reg pgm;
-wire [31:0] instr;
-
-initial begin
-   pgm <= 1'b0;
-   //$monitor("Program Counter: %h",pc_ext);
-end
 
 wire reg_w;
 wire [4:0] rd_sel, rs1_sel, rs2_sel;
@@ -38,8 +25,24 @@ wire [15:0] alu_op;
 wire imm_rs2_sel;
 wire [31:0] imm;
 
+wire [`INSTR_ADDR_WIDTH-1:0] pc, pc_plus, pc_next;
+wire [`INSTR_ADDR_WIDTH-1:0] pc_branch =  alu_out[`INSTR_ADDR_WIDTH-1:0];
+wire [`INSTR_ADDR_WIDTH+1:0] pc_ext = {pc,2'b00};
+wire pc_enable = !rst && bus_ready && rb_ready && !pc_end && !bus_busy;
+
+reg pgm;
+wire [31:0] instr;
+
+initial begin
+   pgm <= 1'b0;
+   //$monitor("Program Counter: %h",pc_ext);
+end
+
+
 wire [31:0] alu_A       = branch ? pc : rs1_data;
 wire [31:0] alu_B       = imm_rs2_sel ? imm : rs2_data;
+
+wire [31:0] data_in, data_out, data_eei;
 
 //   00 -> alu
 //   01 -> bus (data_eei é o dado processado do barramento)
@@ -56,7 +59,6 @@ wire [31:0] rd_data     = rd_data_sel == 2'b00 ? alu_out :
 
 wire [`DBC_RAM_ADDR_WIDTH-1:0] data_addr_in = alu_out[`DBC_RAM_ADDR_WIDTH-1:0];
 wire [`DBC_RAM_ADDR_WIDTH-1:0] data_addr_out = alu_out[`DBC_RAM_ADDR_WIDTH-1:0];
-wire [31:0] data_in, data_out, data_eei;
 
 assign data_in = rs2_data;
 

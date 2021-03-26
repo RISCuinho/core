@@ -14,11 +14,14 @@ module DataBusControl (
    output     [31:0] 			 data_out
 );
 
-//localparam SIZE = 2**ADDR_WIDTH;
-
-reg [31:0] dbc_register;
 
 wire [31:0] local_data_out;
+
+reg local_busy;
+reg local_rst;
+
+reg [31:0] memory [0:`DBC_RAM_SIZE];
+reg [31:0] dbc_register;
 
 wire ram_addrs = (addr_out >= `DBC_RAM_START && addr_out <= `DBC_RAM_END) || 
                  (addr_in  >= `DBC_RAM_START && addr_in  <= `DBC_RAM_END);
@@ -61,13 +64,6 @@ end
 // se usa simulador é bem BRAM, se é DE0-Nano ou similar
 // pode se usar BRAM mas melhor que use a DRAM que acompanha a placa
 // se HUB75 também, já a TANG Nano preciso verificar.
-
-reg local_busy;
-
-       
-reg [31:0] memory [0:`DBC_RAM_SIZE];
-reg local_rst;
-
 initial begin
    local_rst <= 1'bx;
    busy <= 1'bx;
@@ -88,7 +84,7 @@ always @(posedge clk) begin
       $display("Memoria out 0h%08h => 0h%08h", addr_out, memory[addr_out]);
       $display("Registradores: %b",dbc_register_addrs);
    end
-  if(!rst && local_busy === 1'bx )begin;
+  if(!rst && local_busy === 1'bx )begin
       ready <= 1'b1;
       local_busy <= 1'b1;
    end
