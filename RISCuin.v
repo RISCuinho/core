@@ -57,9 +57,6 @@ wire [31:0] rd_data     = rd_data_sel == 2'b00 ? alu_out :
 // as exceptions abaixo serão usadas futuramente
 // wire address-misaligned, access-fault;
 
-wire [`DBC_RAM_ADDR_WIDTH-1:0] data_addr_in = alu_out[`DBC_RAM_ADDR_WIDTH-1:0];
-wire [`DBC_RAM_ADDR_WIDTH-1:0] data_addr_out = alu_out[`DBC_RAM_ADDR_WIDTH-1:0];
-
 assign data_in = rs2_data;
 
 
@@ -146,7 +143,7 @@ DataBusControl data_m_ctl(
                         .ready(bus_ready), .busy(bus_busy),
                         .wd(bus_w), .rd(bus_r),
                         .size_in(bus_size), .size_out(bus_size),
-                        .addr_in(data_addr_in), .addr_out(data_addr_out),
+                        .addr_in(bus_w?alu_out:{32'bz}), .addr_out(bus_r?alu_out:{32'bz}),
                         .data_in(data_in), .data_out(data_out));
 
 
