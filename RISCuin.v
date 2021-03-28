@@ -6,8 +6,7 @@ module RISCuin(
    output pc_end);
 
 wire rb_ready, alu_sel, bus_ready, bus_w, bus_r, bus_busy, unsigned_value;
-
-wire [1:0] bus_size;
+wire [1:0]  bus_size;
 
 wire local_rst = rst | ~rb_ready;
 
@@ -18,7 +17,6 @@ wire [4:0] rd_sel, rs1_sel, rs2_sel;
 wire [1:0] rd_data_sel;
 wire [31:0] rs1_data, rs2_data, alu_out;
 
-wire [1:0]  size_in, size_out;
 
 wire [15:0] alu_op;
 
@@ -64,8 +62,8 @@ assign data_in = rs2_data;
  Determina se o dado deve ser extendido com ou sem sinal
  */
 assign data_eei = !unsigned_value    ? 
-                  size_out == 2'b00 ? {{24{data_out[ 7]}},data_out[ 7:0]} :
-                  size_out == 2'b01 ? {{16{data_out[15]}},data_out[15:0]} :
+                  bus_size == 2'b00 ? {{24{data_out[ 7]}},data_out[ 7:0]} :
+                  bus_size == 2'b01 ? {{16{data_out[15]}},data_out[15:0]} :
                   data_out:data_out;
 
 
