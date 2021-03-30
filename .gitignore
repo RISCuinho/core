@@ -11,6 +11,10 @@ main.cpp
 CMakeLists.txt
 docs
 
+vish_stacktrace.vstf
+vsim.wlf
+tcl_stacktrace.txt
+
 *.bck
 *.bak
 *.vcd
