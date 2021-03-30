@@ -1,8 +1,8 @@
 module IntegerBasicInstructionDecoder (
    input  [31:0] instr,
-   output [15:0] full_op_code,
+   output [15:0] op_code,
 
-   output jump,
+   output        jump, branch,
 
    output        alu_sel,
 
@@ -18,9 +18,10 @@ module IntegerBasicInstructionDecoder (
    output        data_w, data_r, unsigned_value,
    output [ 1:0] data_size
 );
+
 initial begin
    $display("Instruction Decoder");
- end
+end
 
 //0000000 00000 00001 100 00011 0000011
 wire [ 6:0] code    = instr[6:0];
@@ -101,7 +102,7 @@ assign imm          = SLLI || SRLI || SRAI ? {    27'b0      ,  shamt} :
                       TYPE_U               ? {    imm_U      ,  {12'b0}      }  : 
                       32'bx;
 
-assign full_op_code = SLLI || SRLI || SRAI || 
+assign op_code = SLLI || SRLI || SRAI || 
                       TYPE_R               ? {FN7 ,  FN3, code}  :
                       TYPE_S ||
                       TYPE_I || TYPE_IL ||
@@ -120,12 +121,13 @@ assign rs1_sel      = TYPE_I                    ||
 assign rs2_sel      = TYPE_B || TYPE_S || TYPE_R                     ? instr[24:20] : 
                       5'bx;
 
-assign imm_rs2_sel  = TYPE_I || TYPE_S;
+assign imm_rs2_sel  = TYPE_I || TYPE_S || TYPE_B;
 
 // Indica se ativa ou não a ALU
 // quais instruções fazem uso da ALU?
 // apenas ativa se for uma das instruções que usam a ALU, as demais ignora
-assign alu_sel      =   ADDI || ADD   ||
+assign alu_sel      =   TYPE_B ||
+                        ADDI || ADD   ||
                         SLTI || SLTIU || SLT  || 
                         LBU  || LHU   ||
                         LB   || LH    || LW   ||
@@ -173,5 +175,6 @@ assign data_r        = TYPE_IL;
 assign unsigned_value = LBU || LHU || SLTIU; // no caso LBU e LHU fn3 tem o bit 2 igual a 1
 
 assign jump = TYPE_J || AUIPC;
+assign branch = TYPE_B;
 
 endmodule

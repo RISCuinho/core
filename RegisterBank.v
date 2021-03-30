@@ -45,7 +45,7 @@ assign rs2_data = !ready ? {BANK_WIDTH{1'bx}}    :
 always @(posedge clk) begin
    if(!rst && ready && reg_w) begin
       memory[rd_sel] <= rd_data;
-   end
+   end   
 end
    
 endmodule
