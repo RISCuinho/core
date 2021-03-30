@@ -4,7 +4,6 @@ module IntegerBasicALU #(
    input        E,
    input  [15:0] alu_op,
    input  [DATA_WIDTH-1:0] A, B,
-   output                  branch,
    output [DATA_WIDTH-1:0] out
 );
 
@@ -60,17 +59,6 @@ localparam SRL     = {7'b0000000, 3'b101, TYPE_R      }; // b0000-0101-0011-0011
 localparam SRA     = {7'b0100000, 3'b101, TYPE_R      }; // b0100-0101-0011-0011  h4533
 localparam OR      = {7'b0000000, 3'b110, TYPE_R      }; // b0000-0110-0011-0011  h0633
 localparam AND     = {7'b0000000, 3'b111, TYPE_R      }; // b0000-0111-0011-0011  h0733
-
-
-wire local_branch = !E           ?  1'b0          :
-                alu_op == BEQ    ?         A == B :
-                alu_op == BNE    ?         A != B :
-                alu_op == BLT    ? $signed(A) <  $signed(B) :
-                alu_op == BGE    ? $signed(A) >  $signed(B) :
-                alu_op == BLTU   ?         A  <          B :
-                alu_op == BGEU   ?         A  >          B :
-                                   1'b0;
-assign branch = local_branch === 1'bx ? 0 : local_branch;
 
 assign out = !E               ? {DATA_WIDTH{1'b0}}  :
              alu_op == BEQ    ||
