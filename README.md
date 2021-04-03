@@ -54,3 +54,10 @@ Estou usando a De0-nano versão 1.6:
 ## Aprendendo e Tirando Dúvidas ao Vivo
 
 Como estou apredendo não posso tirar muitas dúvidas sobre Verilog ou sobre Risc-V, mas aprendi que a melhor forma de aprender é tirar dúvidas, é um paradoxo, então vamos lá, criei um canal no Twitch para isso, assim caso queira perguntar algo ou participar ao vivo neste projeto entre no canal e poste sua dúvida, se eu não souber vou pesquisar, assim aprendo mais e te ajudo a aprender também. [https://twitch.tv/calrosdelfino_tv](https://twitch.tv/calrosdelfino_tv) ou [https://twitch.tv/arduinominas](https://twitch.tv/arduinominas)
+
+## Você pode colaborar de diversas formas para manutenção deste projeto
+
+* Dentre elas doando via PIX: apoio.projetos@carlosdelfino.eti.br
+* Ou comprando nas lojas [Merch ArduinoMinas](https://merch.streamelements.com/ArduinoMinas) ou [Merch CarlosDelfino_BR](https://merch.streamelements.com/carlosdelfino_br)
+
+Porque você faria isso?, porque é barato, porque você pode ter uma caneca, ou mouse pad, ou camiseta de excelente qualidade, ou porque vai me ajudar a ter mais placas para ter um material de melhor qualidade e assim você poderá usar este código em seus projetos e pesquisas com melhor resultados e todo mundo sai ganhando.
