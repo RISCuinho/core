@@ -1,5 +1,6 @@
-**RISC**uinho - A scratch in the possibilities in the universe of microcontrollers
+**RISC**uinho
 =====================================
+## A scratch in the possibilities in the universe of microcontrollers
 
 ![RISCuinho](./docs/images/logos/RISCuinho-Logo.png)
 
