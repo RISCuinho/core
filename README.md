@@ -1,7 +1,7 @@
 **RISC**uinho - A scratch in the possibilities in the universe of microcontrollers
 =====================================
 
-![RISCuinho](images/logos/RISCuinho-Logo.png)
+![RISCuinho](./docs/images/logos/RISCuinho-Logo.png)
 
 **RISC**uinho (Risquinho), in portuguese is a small scratch on the surface of something, and this represents the proposal of this project that starts in a very didactic way, doing the minimum necessary by scratching the surface of what can be done with a Core or multiple RISC Cores.
 
