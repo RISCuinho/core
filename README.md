@@ -12,7 +12,8 @@ I am a autodidata student I do not have a computer science course and no course 
 
 All this material was assimilated with the help of conversations in the [RISC-V Brasil group on Telegram](https://t.me/riscvbr), where participants from different areas related to IT and exchange experience on microprocessors and microcontrollers, some renowned professionals in the sector, which I am very grateful in the sector, in particular:
 
- * Marcelo Samsoniuk (@samsoniuk) [Core Risc DarkRiscv](https://github.com/darklive/darkriscv) 
+ * Marcelo Samsoniuk (@samsoniuk) [Core Risc DarkRiscv](https://github.com/darklive/darkriscv)
+ * Gustavo Nunes (@namoscagnm) [Um Interpretador Assembly RISC-V em Python](https://github.com/namoscagnm/piscado) 
  * Paulo Matias (@thotypous) 
  * Lucas Teske (@racerxdl) [Core RISC RISCow](https://github.com/racerxdl/riskow)
  * Marcus Medereiros (@zxmarcos) [Core RISC Riscado-V](https://github.com/zxmarcos/riscado-v)
