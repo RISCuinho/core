@@ -121,12 +121,12 @@ assign rs1_sel      = TYPE_I                    ||
 assign rs2_sel      = TYPE_B || TYPE_S || TYPE_R                     ? instr[24:20] : 
                       5'bx;
 
-assign imm_rs2_sel  = TYPE_I || TYPE_S || TYPE_B;
+assign imm_rs2_sel  = TYPE_I || TYPE_S || TYPE_B || TYPE_U;
 
 // Indica se ativa ou não a ALU
 // quais instruções fazem uso da ALU?
 // apenas ativa se for uma das instruções que usam a ALU, as demais ignora
-assign alu_sel      =   TYPE_B ||
+assign alu_sel      =   TYPE_B || AUIPC ||
                         ADDI || ADD   ||
                         SLTI || SLTIU || SLT  || 
                         LBU  || LHU   ||
@@ -147,12 +147,12 @@ assign alu_sel      =   TYPE_B ||
    10 -> imm
    11 -> pc + 4
  */
-assign rd_data_sel = SLTI || SLTIU || SLT ? 2'b00 :
-                     LB   || LH    || LW || 
-                     LBU  || LHU          ? 2'b01 :
-                     LUI                  ? 2'b10 : 
-                     JAL  || JALR         ? 2'b11 :
-                                            2'b00 ;
+assign rd_data_sel = AUIPC || SLTI || SLTIU || SLT ? 2'b00 :
+                     LB    || LH   || LW    || 
+                     LBU   || LHU                  ? 2'b01 :
+                     LUI                           ? 2'b10 : 
+                     JAL   || JALR                 ? 2'b11 :
+                                                     2'b00 ;
 
 // indica que deve escrever no registrador
 assign reg_w        = LB  || LH  || LW || 
@@ -174,7 +174,7 @@ assign data_r        = TYPE_IL;
 
 assign unsigned_value = LBU || LHU || SLTIU; // no caso LBU e LHU fn3 tem o bit 2 igual a 1
 
-assign jump = TYPE_J || AUIPC;
+assign jump = TYPE_J;
 assign branch = TYPE_B;
 
 endmodule
