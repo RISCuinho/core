@@ -1,18 +1,20 @@
-// ============================
-// Post-assembly program listing
-// PC instruction  basic assembly   original assembly    Notes
-//      (31:0)        code              code 
-// 00 0x00000013  addi x0 x0 0
-// 04 0x00000013  addi x0 x0 0
-// 08 0x00000013  addi x0 x0 0
-// 0c 0x00300093	addi x1 x0 3	addi x1, x0, 3
-// 10 0xfff08093	addi x1 x1 -1	addi x1, x1, -1
-// 14 0xfe009ee3	bne x1 x0 -4	bne x1, x0, loop1
-// 18 0xfe000ae3	beq x0 x0 -12	beq x0,x0, start
+//
+//# https://www.kvakil.me/venus/
+//# Video tutorial: https://www.vicilogic.com/vicilearn/run_step/?s_id=1452
+//
+//# assembly program       # Notes  (default imm format is decimal 0d)
+//main:
+//addi x12, x0,  -1    # x12 = 0xffffffff
+//auipc x11, 0x7ffff   # x11 = 0x7ffff004 (since current PC = 4)
+//nop
+//nop
+//nop
+//nop
+//sw    x12, 0x8(x11)  # store x12 in MEM(x11 + 8) = MEM(0x7ffff00c)
+//
 //   0         1        2        3
 // 3 2 1 0  3 2 1 0  3 2 1 0  3 2 1 0
-  00000013 00000013 00000013 
-  00300093 fff08093 fe009ee3 fe000ae3
+  fff00613 7ffff597 00c5a423 00000000 
   00000000 00000000 00000000 00000000
   00000000 00000000 00000000 00000000
   00000000 00000000 00000000 00000000

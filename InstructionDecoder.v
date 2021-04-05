@@ -2,7 +2,7 @@ module IntegerBasicInstructionDecoder (
    input  [31:0] instr,
    output [15:0] op_code,
 
-   output        jump, branch,
+   output        jump, branch, load_pc,
 
    output        alu_sel,
 
@@ -176,5 +176,6 @@ assign unsigned_value = LBU || LHU || SLTIU; // no caso LBU e LHU fn3 tem o bit 
 
 assign jump = TYPE_J;
 assign branch = TYPE_B;
+assign load_pc = AUIPC;
 
 endmodule
