@@ -39,7 +39,7 @@ wire [15:0] op_code;
 wire imm_rs2_sel;
 
 wire [`INSTR_ADDR_WIDTH-1:0] pc, pc_plus, pc_next;
-wire [`INSTR_ADDR_WIDTH-1:0] pc_branch =  alu_out[`INSTR_ADDR_WIDTH-1:0];
+wire [`INSTR_ADDR_WIDTH-1:0] pc_branch =  alu_out[`INSTR_ADDR_WIDTH-1:2];
 wire [`INSTR_ADDR_WIDTH+1:0] pc_ext = {pc,2'b00};
 wire pc_enable = !rst && bus_ready && rb_ready && !pc_end && !bus_busy;
 
@@ -51,7 +51,7 @@ initial begin
    //$monitor("Program Counter: %h",pc_ext);
 end
 
-wire [31:0] alu_A       = branch || load_pc ? pc  : rs1_data;
+wire [31:0] alu_A       = branch || load_pc ? {pc,2'b0}  : rs1_data;
 wire [31:0] alu_B       = imm_rs2_sel       ? imm : rs2_data;
 
 wire do_branch =  branch ?
@@ -69,7 +69,7 @@ wire do_branch =  branch ?
 wire [31:0] rd_data     = rd_data_sel == 2'b00 ? alu_out : 
                           rd_data_sel == 2'b01 ? data_eei: 
                           rd_data_sel == 2'b10 ? imm: 
-                          rd_data_sel == 2'b11 ? pc_plus: 
+                          rd_data_sel == 2'b11 ? {pc_plus,2'b0}: 
                                                  32'bx;
 // Gerenciamento de acesso a memória de dados
 // as exceptions abaixo serão usadas futuramente

@@ -67,6 +67,7 @@ assign out = !E               ? {DATA_WIDTH{1'b0}}  :
              alu_op == BGE    ||
              alu_op == BLTU   ||
              alu_op == BGEU   ||
+             alu_op == AUIPC ||
              alu_op == ADD   ||
              alu_op == ADDI  ||
              alu_op == LB    ||

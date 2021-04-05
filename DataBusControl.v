@@ -106,22 +106,6 @@ end
 
 always @(posedge clk) begin
    if(!rst && ready && !local_busy && ram_addr_in)begin
- /*
-      if (rd) begin
-         busy <= 1'b1;
-         case (size_out)
-            2'b00:begin
-               local_data_out <= {24'b0, memory[addr_out][ 8:0]};
-            end
-            2'b01: begin
-               local_data_out <= {16'b0, memory[addr_out][15:0]};
-            end
-            2'b10: begin
-               local_data_out <= memory[addr_out]; 
-            end
-         endcase
-      end
- */
       if(wd) begin
          local_busy <= 1'b1;
          case (size_in)
