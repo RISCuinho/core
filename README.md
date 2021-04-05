@@ -37,23 +37,30 @@ O **RISC**uinho também é um core de um 3 estágio de um único ciclo de clock,
 
 A pasta [examples](./examples) possui exemplos para testes, na sua maioria obtidos no curso oferecido pela [Vicilogic][https://www.vicilogic.com/], tais exemplos podem ser obtidos no link [https://www.vicilogic.com/vicilearn/run_step/?s_id=1452](https://www.vicilogic.com/vicilearn/run_step/?s_id=1452)
 
-## Simulação
+## Softwares
+### Simulação
 
 As Simulações estão sendo feitas com IVerilog no Windows 10 com WSL, a condificação é feita no VSCode, e a verificação dos sinais gerados com GTKWave.
 
 As instruções são testadas tanto no ambiente Vicilogic como no simulador [emulsiV](https://carlosdelfino.eti.br/emulsiV)
 
-## Quartus
+### Quartus
 
 Estou usando o Quartus 20.4 Prime Lite Edtion para fazer os testes em uma placa De0-nano.
 
-## De0-Nano
+## Hardware FPGA
+
+### De0-Nano
 
 Placa de prototipação e estudos da Terasic.
 
 Estou usando a De0-nano versão 1.6:
 
  * FPGA: Altera Cyclone IV EP4CE22FE22F17C6N
+
+### TangNano
+
+Estou usando também uma [TangNano que pode ser adquirida clickando aqui](https://s.click.aliexpress.com/e/_A8IjxE).
 
 ## Aprendendo e Tirando Dúvidas ao Vivo
 
