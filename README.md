@@ -1,5 +1,8 @@
-**RISC**uinho - A scratch in the possibilities in the universe of microcontrollers
+**RISC**uinho
 =====================================
+## A scratch in the possibilities in the universe of microcontrollers
+
+![RISCuinho](./docs/images/logos/RISCuinho-Logo.png)
 
 **RISC**uinho (Risquinho), in portuguese is a small scratch on the surface of something, and this represents the proposal of this project that starts in a very didactic way, doing the minimum necessary by scratching the surface of what can be done with a Core or multiple RISC Cores.
 
@@ -9,7 +12,8 @@ I am a autodidata student I do not have a computer science course and no course 
 
 All this material was assimilated with the help of conversations in the [RISC-V Brasil group on Telegram](https://t.me/riscvbr), where participants from different areas related to IT and exchange experience on microprocessors and microcontrollers, some renowned professionals in the sector, which I am very grateful in the sector, in particular:
 
- * Marcelo Samsoniuk (@samsoniuk) [Core Risc DarkRiscv](https://github.com/darklive/darkriscv) 
+ * Marcelo Samsoniuk (@samsoniuk) [Core Risc DarkRiscv](https://github.com/darklive/darkriscv)
+ * Gustavo Nunes (@namoscagnm) [Um Interpretador Assembly RISC-V em Python](https://github.com/namoscagnm/piscado) 
  * Paulo Matias (@thotypous) 
  * Lucas Teske (@racerxdl) [Core RISC RISCow](https://github.com/racerxdl/riskow)
  * Marcus Medereiros (@zxmarcos) [Core RISC Riscado-V](https://github.com/zxmarcos/riscado-v)
@@ -33,20 +37,38 @@ O **RISC**uinho também é um core de um 3 estágio de um único ciclo de clock,
 
 A pasta [examples](./examples) possui exemplos para testes, na sua maioria obtidos no curso oferecido pela [Vicilogic][https://www.vicilogic.com/], tais exemplos podem ser obtidos no link [https://www.vicilogic.com/vicilearn/run_step/?s_id=1452](https://www.vicilogic.com/vicilearn/run_step/?s_id=1452)
 
-## Simulação
+## Softwares
+### Simulação
 
 As Simulações estão sendo feitas com IVerilog no Windows 10 com WSL, a condificação é feita no VSCode, e a verificação dos sinais gerados com GTKWave.
 
 As instruções são testadas tanto no ambiente Vicilogic como no simulador [emulsiV](https://carlosdelfino.eti.br/emulsiV)
 
-## Quartus
+### Quartus
 
 Estou usando o Quartus 20.4 Prime Lite Edtion para fazer os testes em uma placa De0-nano.
 
-## De0-Nano
+## Hardware FPGA
+
+### De0-Nano
 
 Placa de prototipação e estudos da Terasic.
 
 Estou usando a De0-nano versão 1.6:
 
  * FPGA: Altera Cyclone IV EP4CE22FE22F17C6N
+
+### TangNano
+
+Estou usando também uma [TangNano que pode ser adquirida clickando aqui](https://s.click.aliexpress.com/e/_A8IjxE).
+
+## Aprendendo e Tirando Dúvidas ao Vivo
+
+Como estou apredendo não posso tirar muitas dúvidas sobre Verilog ou sobre Risc-V, mas aprendi que a melhor forma de aprender é tirar dúvidas, é um paradoxo, então vamos lá, criei um canal no Twitch para isso, assim caso queira perguntar algo ou participar ao vivo neste projeto entre no canal e poste sua dúvida, se eu não souber vou pesquisar, assim aprendo mais e te ajudo a aprender também. [https://twitch.tv/calrosdelfino_tv](https://twitch.tv/calrosdelfino_tv) ou [https://twitch.tv/arduinominas](https://twitch.tv/arduinominas)
+
+## Você pode colaborar de diversas formas para manutenção deste projeto
+
+* Dentre elas doando via PIX: apoio.projetos@carlosdelfino.eti.br
+* Ou comprando nas lojas [Merch ArduinoMinas](https://merch.streamelements.com/ArduinoMinas) ou [Merch CarlosDelfino_BR](https://merch.streamelements.com/carlosdelfino_br)
+
+Porque você faria isso?, porque é barato, porque você pode ter uma caneca, ou mouse pad, ou camiseta de excelente qualidade, ou porque vai me ajudar a ter mais placas para ter um material de melhor qualidade e assim você poderá usar este código em seus projetos e pesquisas com melhor resultados e todo mundo sai ganhando.
