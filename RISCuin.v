@@ -61,7 +61,8 @@ wire do_branch =  branch ?
                      op_code == BGE    ? $signed(rs1_data) >  $signed(rs2_data) :
                      op_code == BLTU   ?         rs1_data  <          rs2_data :
                      op_code == BGEU   ?         rs1_data  >          rs2_data :
-                                                         1'b0:1'b0;
+                                                         1'b0:
+                                                         jump;
 //   00 -> alu
 //   01 -> bus (data_eei é o dado processado do barramento)
 //   10 -> imm
