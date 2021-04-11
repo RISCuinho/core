@@ -121,12 +121,12 @@ assign rs1_sel      = TYPE_I                    ||
 assign rs2_sel      = TYPE_B || TYPE_S || TYPE_R                     ? instr[24:20] : 
                       5'bx;
 
-assign imm_rs2_sel  = TYPE_I || TYPE_S || TYPE_B;
+assign imm_rs2_sel  = TYPE_J || TYPE_I || TYPE_S || TYPE_B;
 
 // Indica se ativa ou não a ALU
 // quais instruções fazem uso da ALU?
 // apenas ativa se for uma das instruções que usam a ALU, as demais ignora
-assign alu_sel      =   TYPE_B ||
+assign alu_sel      =   TYPE_J || TYPE_B ||
                         ADDI || ADD   ||
                         SLTI || SLTIU || SLT  || 
                         LBU  || LHU   ||

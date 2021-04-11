@@ -51,7 +51,7 @@ initial begin
    //$monitor("Program Counter: %h",pc_ext);
 end
 
-wire [31:0] alu_A       = branch      ? pc  : rs1_data;
+wire [31:0] alu_A       = branch || jump ? pc  : rs1_data;
 wire [31:0] alu_B       = imm_rs2_sel ? imm : rs2_data;
 
 wire do_branch =  branch  ?

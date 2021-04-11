@@ -61,6 +61,7 @@ localparam OR      = {7'b0000000, 3'b110, TYPE_R      }; // b0000-0110-0011-0011
 localparam AND     = {7'b0000000, 3'b111, TYPE_R      }; // b0000-0111-0011-0011  h0733
 
 assign out = !E               ? {DATA_WIDTH{1'b0}}  :
+             alu_op == JAL    ||
              alu_op == BEQ    ||
              alu_op == BNE    ||
              alu_op == BLT    ||
