@@ -54,14 +54,15 @@ end
 wire [31:0] alu_A       = branch      ? pc  : rs1_data;
 wire [31:0] alu_B       = imm_rs2_sel ? imm : rs2_data;
 
-wire do_branch =  branch ?
+wire do_branch =  branch  ?
                      op_code == BEQ    ?         rs1_data  ==         rs2_data :
                      op_code == BNE    ?         rs1_data  !=         rs2_data :
                      op_code == BLT    ? $signed(rs1_data) <  $signed(rs2_data) :
                      op_code == BGE    ? $signed(rs1_data) >  $signed(rs2_data) :
                      op_code == BLTU   ?         rs1_data  <          rs2_data :
                      op_code == BGEU   ?         rs1_data  >          rs2_data :
-                                                         1'b0:1'b0;
+                                                         1'b0:
+                                                         jump;
 //   00 -> alu
 //   01 -> bus (data_eei é o dado processado do barramento)
 //   10 -> imm
