@@ -1,10 +1,10 @@
 module IntegerBasicALU #(
    parameter DATA_WIDTH = 32
 )(
-   input        E,
-   input  [15:0] alu_op,
-   input  [DATA_WIDTH-1:0] A, B,
-   output [DATA_WIDTH-1:0] out
+   input         E,
+   input         [15:0] alu_op,
+   input  signed [DATA_WIDTH-1:0] A, B,
+   output signed [DATA_WIDTH-1:0] out
 );
 
 localparam TYPE_IL      = 7'b0000011;
@@ -88,7 +88,7 @@ assign out = !E               ? {DATA_WIDTH{1'b0}}  :
              alu_op == SRL    ? $signed(A) >> $signed(B) :  
 
              alu_op == SRAI  ||
-             alu_op == SRA    ? $signed(A) >>> $signed(B) :
+             alu_op == SRA    ? $signed($signed(A) >>> B) :
 
              alu_op == SLTIU ?  A < B                  :
 
