@@ -10,6 +10,8 @@ teste.cpp
 main.cpp
 CMakeLists.txt
 docs
+.gitkwaverc
+vsim.wlf
 
 *.bck
 *.bak
