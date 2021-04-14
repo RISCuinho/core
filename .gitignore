@@ -10,11 +10,9 @@ teste.cpp
 main.cpp
 CMakeLists.txt
 docs
-.gitkwaverc
+.gtkwaverc
 vsim.wlf
-
 vish_stacktrace.vstf
-vsim.wlf
 tcl_stacktrace.txt
 
 *.bck

@@ -24,7 +24,7 @@ wire [1:0]  bus_size;
 
 wire local_rst = rst | ~rb_ready;
 
-wire jump, branch, load_pc;
+wire branch, load_pc;
 
 wire reg_w;
 wire [4:0] rd_sel, rs1_sel, rs2_sel;
@@ -52,7 +52,7 @@ initial begin
 end
 
 wire [31:0] alu_A       = branch || load_pc ? {pc,2'b0}  : rs1_data;
-wire [31:0] alu_B       = imm_rs2_sel       ? imm : rs2_data;
+wire [31:0] alu_B       = imm_rs2_sel       ? imm        : rs2_data;
 
 wire do_branch =  branch ?
                      op_code == BEQ    ?         rs1_data  ==         rs2_data :
@@ -62,7 +62,7 @@ wire do_branch =  branch ?
                      op_code == BLTU   ?         rs1_data  <          rs2_data :
                      op_code == BGEU   ?         rs1_data  >          rs2_data :
                                                          1'b0:
-                                                         jump;
+                                                         load_pc;
 //   00 -> alu
 //   01 -> bus (data_eei é o dado processado do barramento)
 //   10 -> imm
@@ -119,7 +119,7 @@ ProgramMemory #(.INSTR_ADDR_WIDTH(`INSTR_ADDR_WIDTH))
    Decodificador de instruções RV32I básico.
  */
 IntegerBasicInstructionDecoder ib_id(.instr(instr), .op_code(op_code), 
-                        .alu_sel(alu_sel), .jump(jump), .branch(branch), .load_pc(load_pc),
+                        .alu_sel(alu_sel), .branch(branch), .load_pc(load_pc),
                         .rs1_sel(rs1_sel), .rs2_sel(rs2_sel), .rd_sel(rd_sel), 
                         .rd_data_sel(rd_data_sel),
                         .reg_w(reg_w),
