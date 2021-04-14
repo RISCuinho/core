@@ -24,7 +24,7 @@ wire [1:0]  bus_size;
 
 wire local_rst = rst | ~rb_ready;
 
-wire jump, branch;
+wire jump, branch, load_pc;
 
 wire reg_w;
 wire [4:0] rd_sel, rs1_sel, rs2_sel;
@@ -39,7 +39,7 @@ wire [15:0] op_code;
 wire imm_rs2_sel;
 
 wire [`INSTR_ADDR_WIDTH-1:0] pc, pc_plus, pc_next;
-wire [`INSTR_ADDR_WIDTH-1:0] pc_branch =  alu_out[`INSTR_ADDR_WIDTH-1:0];
+wire [`INSTR_ADDR_WIDTH-1:0] pc_branch =  alu_out[`INSTR_ADDR_WIDTH-1:2];
 wire [`INSTR_ADDR_WIDTH+1:0] pc_ext = {pc,2'b00};
 wire pc_enable = !rst && bus_ready && rb_ready && !pc_end && !bus_busy;
 
@@ -51,8 +51,8 @@ initial begin
    //$monitor("Program Counter: %h",pc_ext);
 end
 
-wire [31:0] alu_A       = branch      ? pc  : rs1_data;
-wire [31:0] alu_B       = imm_rs2_sel ? imm : rs2_data;
+wire [31:0] alu_A       = branch || load_pc ? {pc,2'b0}  : rs1_data;
+wire [31:0] alu_B       = imm_rs2_sel       ? imm : rs2_data;
 
 wire do_branch =  branch ?
                      op_code == BEQ    ?         rs1_data  ==         rs2_data :
@@ -61,7 +61,8 @@ wire do_branch =  branch ?
                      op_code == BGE    ? $signed(rs1_data) >  $signed(rs2_data) :
                      op_code == BLTU   ?         rs1_data  <          rs2_data :
                      op_code == BGEU   ?         rs1_data  >          rs2_data :
-                                                         1'b0:1'b0;
+                                                         1'b0:
+                                                         jump;
 //   00 -> alu
 //   01 -> bus (data_eei é o dado processado do barramento)
 //   10 -> imm
@@ -69,7 +70,7 @@ wire do_branch =  branch ?
 wire [31:0] rd_data     = rd_data_sel == 2'b00 ? alu_out : 
                           rd_data_sel == 2'b01 ? data_eei: 
                           rd_data_sel == 2'b10 ? imm: 
-                          rd_data_sel == 2'b11 ? pc_plus: 
+                          rd_data_sel == 2'b11 ? {pc_plus,2'b0}: 
                                                  32'bx;
 // Gerenciamento de acesso a memória de dados
 // as exceptions abaixo serão usadas futuramente
@@ -118,7 +119,7 @@ ProgramMemory #(.INSTR_ADDR_WIDTH(`INSTR_ADDR_WIDTH))
    Decodificador de instruções RV32I básico.
  */
 IntegerBasicInstructionDecoder ib_id(.instr(instr), .op_code(op_code), 
-                        .alu_sel(alu_sel), .jump(jump), .branch(branch),
+                        .alu_sel(alu_sel), .jump(jump), .branch(branch), .load_pc(load_pc),
                         .rs1_sel(rs1_sel), .rs2_sel(rs2_sel), .rd_sel(rd_sel), 
                         .rd_data_sel(rd_data_sel),
                         .reg_w(reg_w),

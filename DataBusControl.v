@@ -23,15 +23,24 @@ reg local_rst;
 reg [31:0] memory [0:`DBC_RAM_SIZE];
 reg [31:0] dbc_register;
 
-wire ram_addr_out = addr_out >= `DBC_RAM_START && addr_out <= `DBC_RAM_END; 
-wire ram_addr_in  = addr_in  >= `DBC_RAM_START && addr_in  <= `DBC_RAM_END;
+wire ram_addr_out = (addr_out >= `DBC_RAM_START       && addr_out <= `DBC_RAM_END) ||
+                    (addr_out >= `DBC_RAM_GLASS_START && addr_out <= `DBC_RAM_GLASS_END); 
+wire ram_addr_in  = (addr_in  >= `DBC_RAM_START       && addr_in  <= `DBC_RAM_END) ||
+                    (addr_in  >= `DBC_RAM_GLASS_START && addr_in  <= `DBC_RAM_GLASS_END);
 
+wire [`DBC_RAM_ADDR_WIDTH-1:0] local_ram_addr_out = ram_addr_out ? 
+                                                   addr_out[`DBC_RAM_ADDR_WIDTH-1:0]: 
+                                                      {`DBC_RAM_ADDR_WIDTH{1'bz}}; 
+wire [`DBC_RAM_ADDR_WIDTH-1:0] local_ram_addr_in  = ram_addr_out ?
+                                                   addr_in[`DBC_RAM_ADDR_WIDTH-1:0] :
+                                                      {`DBC_RAM_ADDR_WIDTH{1'bz}};
+ 
 wire dbc_register_addrs = addr_out >= `DBC_REGISTER_START && addr_out <= `DBC_REGISTER_END;
 
 assign local_data_out = (!rst && ready && !busy && ram_addr_out && rd)  ?
-                       size_out == 2'b00 ? {24'b0, memory[addr_out][ 7:0]} :
-                       size_out == 2'b01 ? {16'b0, memory[addr_out][15:0]} :
-                       size_out == 2'b10 ? memory[addr_out] : 32'b0 : 
+                       size_out == 2'b00 ? {24'b0, memory[local_ram_addr_out][ 7:0]} :
+                       size_out == 2'b01 ? {16'b0, memory[local_ram_addr_out][15:0]} :
+                       size_out == 2'b10 ? memory[local_ram_addr_out] : 32'b0 : 
                        32'b0;
 
 assign data_out = dbc_register_addrs                                    ? // endereços dos registradores dbc
@@ -82,7 +91,7 @@ end
 always @(posedge clk) begin
 
   if(rd) begin
-      $display("Memoria out 0h%08h => 0h%08h", addr_out, memory[addr_out]);
+      $display("Memoria out 0h%08h => 0h%08h", addr_out, memory[local_ram_addr_out]);
       $display("Registradores: %b",dbc_register_addrs);
    end
   if(!rst && local_busy === 1'bx )begin
@@ -97,33 +106,17 @@ end
 
 always @(posedge clk) begin
    if(!rst && ready && !local_busy && ram_addr_in)begin
- /*
-      if (rd) begin
-         busy <= 1'b1;
-         case (size_out)
-            2'b00:begin
-               local_data_out <= {24'b0, memory[addr_out][ 8:0]};
-            end
-            2'b01: begin
-               local_data_out <= {16'b0, memory[addr_out][15:0]};
-            end
-            2'b10: begin
-               local_data_out <= memory[addr_out]; 
-            end
-         endcase
-      end
- */
       if(wd) begin
          local_busy <= 1'b1;
          case (size_in)
             2'b10: // 32bits
-               memory[addr_in] <= data_in;
+               memory[local_ram_addr_in] <= local_ram_addr_in;
             2'b01: // 16bits
-               memory[addr_in] <= {memory[addr_in][31:16],data_in[15:0]};
+               memory[local_ram_addr_in] <= {memory[local_ram_addr_in][31:16],local_ram_addr_in[15:0]};
             2'b00: // 8bits
-               memory[addr_in] <= {memory[addr_in][31:8],data_in[7:0]};
+               memory[local_ram_addr_in] <= {memory[local_ram_addr_in][31:8],local_ram_addr_in[7:0]};
          endcase
-         $display("Memoria in 0h%08h <= 0h%08h", addr_in, memory[addr_in]);
+         $display("Memoria in 0h%08h <= 0h%08h", local_ram_addr_in, memory[local_ram_addr_in]);
       end
    end
 
