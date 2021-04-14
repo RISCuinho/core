@@ -2,7 +2,7 @@ module IntegerBasicInstructionDecoder (
    input  [31:0] instr,
    output [15:0] op_code,
 
-   output        jump, branch, load_pc,
+   output        branch, load_pc,
 
    output        alu_sel,
 
@@ -121,12 +121,12 @@ assign rs1_sel      = TYPE_I                    ||
 assign rs2_sel      = TYPE_B || TYPE_S || TYPE_R                     ? instr[24:20] : 
                       5'bx;
 
-assign imm_rs2_sel  = TYPE_I || TYPE_S || TYPE_B || TYPE_U;
+assign imm_rs2_sel  = TYPE_J || TYPE_I || TYPE_S || TYPE_B || TYPE_U;
 
 // Indica se ativa ou não a ALU
 // quais instruções fazem uso da ALU?
 // apenas ativa se for uma das instruções que usam a ALU, as demais ignora
-assign alu_sel      =   TYPE_B || AUIPC ||
+assign alu_sel      =   TYPE_J || AUIPC || TYPE_B ||
                         ADDI || ADD   ||
                         SLTI || SLTIU || SLT  || 
                         LBU  || LHU   ||
@@ -174,8 +174,7 @@ assign data_r        = TYPE_IL;
 
 assign unsigned_value = LBU || LHU || SLTIU; // no caso LBU e LHU fn3 tem o bit 2 igual a 1
 
-assign jump = TYPE_J;
 assign branch = TYPE_B;
-assign load_pc = AUIPC;
+assign load_pc = TYPE_J || AUIPC;
 
 endmodule
