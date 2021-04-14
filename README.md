@@ -4,6 +4,8 @@
 
 ![RISCuinho](./docs/images/logos/RISCuinho-Logo.png)
 
+** Versão nMingen ** Detalhes em [Tutorial nMingen no Wiki]()
+
 **RISC**uinho (Risquinho), in portuguese is a small scratch on the surface of something, and this represents the proposal of this project that starts in a very didactic way, doing the minimum necessary by scratching the surface of what can be done with a Core or multiple RISC Cores.
 
 This project is educational and aims at my study on microprocessors and to teach my introductory courses on microprocessor programming and architecture at [Arduino Minas (Curso Maker/Geringonça Maker Space)](https://facebook.com/CursoMaker). RISCuinho (Risquinho) will also be used for my RTOS studies when it is possible to multiply its core to simulate multicore microcontrollers.
