@@ -6,8 +6,7 @@ module RISCuin(
    output pc_end);
 
 wire rb_ready, alu_sel, bus_ready, bus_w, bus_r, bus_busy, unsigned_value;
-
-wire [1:0] bus_size;
+wire [1:0]  bus_size;
 
 wire local_rst = rst | ~rb_ready;
 
@@ -18,7 +17,6 @@ wire [4:0] rd_sel, rs1_sel, rs2_sel;
 wire [1:0] rd_data_sel;
 wire [31:0] rs1_data, rs2_data, alu_out;
 
-wire [1:0]  size_in, size_out;
 
 wire [15:0] alu_op;
 
@@ -57,9 +55,6 @@ wire [31:0] rd_data     = rd_data_sel == 2'b00 ? alu_out :
 // as exceptions abaixo serão usadas futuramente
 // wire address-misaligned, access-fault;
 
-wire [`DBC_RAM_ADDR_WIDTH-1:0] data_addr_in = alu_out[`DBC_RAM_ADDR_WIDTH-1:0];
-wire [`DBC_RAM_ADDR_WIDTH-1:0] data_addr_out = alu_out[`DBC_RAM_ADDR_WIDTH-1:0];
-
 assign data_in = rs2_data;
 
 
@@ -67,8 +62,8 @@ assign data_in = rs2_data;
  Determina se o dado deve ser extendido com ou sem sinal
  */
 assign data_eei = !unsigned_value    ? 
-                  size_out == 2'b00 ? {{24{data_out[ 7]}},data_out[ 7:0]} :
-                  size_out == 2'b01 ? {{16{data_out[15]}},data_out[15:0]} :
+                  bus_size == 2'b00 ? {{24{data_out[ 7]}},data_out[ 7:0]} :
+                  bus_size == 2'b01 ? {{16{data_out[15]}},data_out[15:0]} :
                   data_out:data_out;
 
 
@@ -146,7 +141,7 @@ DataBusControl data_m_ctl(
                         .ready(bus_ready), .busy(bus_busy),
                         .wd(bus_w), .rd(bus_r),
                         .size_in(bus_size), .size_out(bus_size),
-                        .addr_in(data_addr_in), .addr_out(data_addr_out),
+                        .addr_in(bus_w?alu_out:{32'bz}), .addr_out(bus_r?alu_out:{32'bz}),
                         .data_in(data_in), .data_out(data_out));
 
 

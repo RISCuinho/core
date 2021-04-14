@@ -1,8 +1,8 @@
 // Mapeamento de Memória para DBC - Data Busc Control
 `define DBC_RAM_START          							8'h00000000
-`define DBC_RAM_END            							8'h0000FFFF
-`define DBC_RAM_SIZE											65535
-`define DBC_RAM_ADDR_WIDTH                         16
+`define DBC_RAM_END            							8'h000001FF
+`define DBC_RAM_SIZE											512
+`define DBC_RAM_ADDR_WIDTH                         9
 
 /*
 https://github.com/DuinOS/riscuinho/wiki/DataBusControlRegister

@@ -23,9 +23,16 @@ reg local_rst;
 reg [31:0] memory [0:`DBC_RAM_SIZE];
 reg [31:0] dbc_register;
 
-wire ram_addrs = (addr_out >= `DBC_RAM_START && addr_out <= `DBC_RAM_END) || 
-                 (addr_in  >= `DBC_RAM_START && addr_in  <= `DBC_RAM_END);
+wire ram_addr_out = addr_out >= `DBC_RAM_START && addr_out <= `DBC_RAM_END; 
+wire ram_addr_in  = addr_in  >= `DBC_RAM_START && addr_in  <= `DBC_RAM_END;
+
 wire dbc_register_addrs = addr_out >= `DBC_REGISTER_START && addr_out <= `DBC_REGISTER_END;
+
+assign local_data_out = (!rst && ready && !busy && ram_addr_out && rd)  ?
+                       size_out == 2'b00 ? {24'b0, memory[addr_out][ 7:0]} :
+                       size_out == 2'b01 ? {16'b0, memory[addr_out][15:0]} :
+                       size_out == 2'b10 ? memory[addr_out] : 32'b0 : 
+                       32'b0;
 
 assign data_out = dbc_register_addrs                                    ? // endereços dos registradores dbc
 						
@@ -36,16 +43,10 @@ assign data_out = dbc_register_addrs                                    ? // end
                    32'b1                                   :  // default para registradores dbc 
 
 						local_data_out                                       ;  // outro dado endereçado
-						
-assign local_data_out = (!rst && ready && !busy && ram_addrs && rd)  ?
-                       size_out == 2'b00 ? {24'b0, memory[addr_out][ 7:0]} :
-                       size_out == 2'b01 ? {16'b0, memory[addr_out][15:0]} :
-                       size_out == 2'b10 ? memory[addr_out] : 32'b0 : 
-                       32'b0;
 
 always @(posedge clk ) begin
    dbc_register[`DBC_REGISTER_EMPTY_ADDR_EXCEPTION_START_BIT] <=
-                                 !ram_addrs &&
+                                 !ram_addr_out && !ram_addr_in  &&
                                  !dbc_register_addrs ; 
    // Lança uma exception se o endereço de memória estiver desalinhado
    // half-word cuida apenas do primeiro bit menos significativo 
@@ -95,7 +96,7 @@ end
 
 
 always @(posedge clk) begin
-   if(!rst && ready && !local_busy && ram_addrs)begin
+   if(!rst && ready && !local_busy && ram_addr_in)begin
  /*
       if (rd) begin
          busy <= 1'b1;
