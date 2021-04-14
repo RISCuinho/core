@@ -18,9 +18,12 @@ module RISCuin_tb;
 	initial 
 	begin
 		#00000 $display("Iniciado!");
+		
 		$dumpfile("RISCuin.vcd");
 		$dumpvars;
-		#01000 $finish;
+
+		#01500 $display("1500 Ticks será finalziado!");
+		$finish;
 	 end
 
 	wire  pc_end;
