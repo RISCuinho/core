@@ -50,3 +50,17 @@ Placa de prototipação e estudos da Terasic.
 Estou usando a De0-nano versão 1.6:
 
  * FPGA: Altera Cyclone IV EP4CE22FE22F17C6N
+
+
+## Projeto RISCuinho Paranoico
+
+O Projeto Paranóico visa inserir no RISCuinho a extensão de instrunsões vetoriais, que trazem capacidade de lidar com multiplicos dados para processamento de redes neurais.
+
+### Fontes de estudos - 
+
+Especificiação RISC-V 2019/12/13, página 123 (141) Capítulo 21 - “V” Standard Extension for Vector
+Operations.
+
+Redes Neurais Artificiais para engenheiros e ciências aplicadas - Curso Prático. Ivan Nunes da Silva, Danilo Hernane Spatti, Rogério Andrade Flauzino.
+
+https://github.com/DuinOS/riscuinho/projects/5
