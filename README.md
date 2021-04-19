@@ -37,6 +37,10 @@ O **RISC**uinho também é um core de um 3 estágio de um único ciclo de clock,
 
 A pasta [examples](./examples) possui exemplos para testes, na sua maioria obtidos no curso oferecido pela [Vicilogic][https://www.vicilogic.com/], tais exemplos podem ser obtidos no link [https://www.vicilogic.com/vicilearn/run_step/?s_id=1452](https://www.vicilogic.com/vicilearn/run_step/?s_id=1452)
 
+## Especificação RISC-V
+
+A Especificação RISC-V que estou sendo seguindo está disponível no seguinte link: https://github.com/riscv/riscv-isa-manual/releases/tag/Ratified-IMAFDQC, é a versão 20191213.
+
 ## Softwares
 ### Simulação
 
