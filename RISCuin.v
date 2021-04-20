@@ -22,6 +22,22 @@ localparam BGEU    = {7'b0000000, 3'b111, TYPE_B      }; // b0000-0011-1110-0011
 wire rb_ready, alu_sel, bus_ready, bus_w, bus_r, bus_busy, unsigned_value;
 wire [1:0]  bus_size;
 
+`include "./Zihintpause_config.vh"
+wire pause, pause_state; // apenas entra na pause se não estiver em pausa
+                         // não há como receber a instrução durante uma pausa.
+                         // portando caracteriza um erro.
+
+integer pause_clock_counter = 0;
+
+assign pause_state = pause_clock_counter != 0;
+
+always @(posedge clk) begin
+   if(pause || pause_state) begin
+      pause_clock_counter <= pause_clock_counter - 1;
+      if(pause_clock_counter == `PAUSE_CLOCK_COUNTER_LIMIT) pause_clock_counter <= 0;
+   end
+end
+
 wire local_rst = rst | ~rb_ready;
 
 wire branch, load_pc;
@@ -41,7 +57,7 @@ wire imm_rs2_sel;
 wire [`INSTR_ADDR_WIDTH-1:0] pc, pc_plus, pc_next;
 wire [`INSTR_ADDR_WIDTH-1:0] pc_branch =  alu_out[`INSTR_ADDR_WIDTH-1:2];
 wire [`INSTR_ADDR_WIDTH+1:0] pc_ext = {pc,2'b00};
-wire pc_enable = !rst && bus_ready && rb_ready && !pc_end && !bus_busy;
+wire pc_enable = !rst && bus_ready && rb_ready && !pc_end && !bus_busy && !pause;
 
 reg pgm;
 wire [31:0] instr;
@@ -128,6 +144,10 @@ IntegerBasicInstructionDecoder ib_id(.instr(instr), .op_code(op_code),
                         .data_w(bus_w), .data_r(bus_r),
                         .data_size(bus_size), .unsigned_value(unsigned_value)
                      );
+
+ZihintpauseInstructionDecoder zihintpause_id(.instr(instr), 
+                        .pause(pause));
+
 /* #######
    Banco de Registradores
  */                     
