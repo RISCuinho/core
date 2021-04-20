@@ -12,18 +12,18 @@ wire [ 2:0] fn3     = instr[14:12]; // 000
 wire [ 4:0] rs1     = instr[19:15]; // rs1 = x0 (00000)
 wire [ 4:0] pred    = instr[23:20]; // pred=w (0001)
 wire [ 2:0] succ    = instr[27:24]; // succ=  (0000) 
-wire [ 3:0] b3      = instr[31:28]; // 0000
+wire [ 3:0] fm      = instr[31:28]; // 0000
 
 wire TYPE_IF  = code == 7'b0001111;
 
 // PAUSE is encoded as a FENCE instruction with pred=W, succ=0, fm=0, rd=x0, and rs1=x0.
-assign pause = TYPE_IF              && 
+assign pause = TYPE_IF       && 
             rd   == 5'b00000 &&
             fn3  == 3'b000   &&
             rs1  == 5'b00000 &&
             pred == 4'b0001  &&
             succ == 4'b0000  &&
-            b3   == 4'b0000  ;
+            fm   == 4'b0000  ;
 
 endmodule
 
