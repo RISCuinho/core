@@ -31,9 +31,9 @@ integer pause_clock_counter = 0;
 
 assign pause_state = pause_clock_counter != 0;
 
-always @(posedge clk) begin
+always @(negedge clk) begin
    if(pause || pause_state) begin
-      pause_clock_counter <= pause_clock_counter - 1;
+      pause_clock_counter <= pause_clock_counter + 1;
       if(pause_clock_counter == `PAUSE_CLOCK_COUNTER_LIMIT) pause_clock_counter <= 0;
    end
 end
@@ -57,7 +57,7 @@ wire imm_rs2_sel;
 wire [`INSTR_ADDR_WIDTH-1:0] pc, pc_plus, pc_next;
 wire [`INSTR_ADDR_WIDTH-1:0] pc_branch =  alu_out[`INSTR_ADDR_WIDTH-1:2];
 wire [`INSTR_ADDR_WIDTH+1:0] pc_ext = {pc,2'b00};
-wire pc_enable = !rst && bus_ready && rb_ready && !pc_end && !bus_busy && !pause;
+wire pc_enable = !rst && bus_ready && rb_ready && !pc_end && !bus_busy && !pause_state;
 
 reg pgm;
 wire [31:0] instr;
