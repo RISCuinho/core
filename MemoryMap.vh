@@ -2,7 +2,7 @@
 `define DBC_RAM_START          							32'h00000000
 `define DBC_RAM_END            							32'h000001FF
 `define DBC_RAM_SIZE											(`DBC_RAM_END - `DBC_RAM_START)
-`define DBC_RAM_ADDR_WIDTH                         ($clog2(`DBC_RAM_END - `DBC_RAM_START+1))
+`define DBC_RAM_ADDR_WIDTH                        9 // ($clog2(`DBC_RAM_END - `DBC_RAM_START+1))
 
 `define DBC_RAM_GLASS_START          							32'h7ffff000
 `define DBC_RAM_GLASS_END            							32'h7ffff1FF
