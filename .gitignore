@@ -77,3 +77,4 @@ serv_req_info.txt
 *.gtkw
 *.json
 *.png
+fusesoc.conf

@@ -1,0 +1,67 @@
+CAPI=2:
+name: DuinOS:riscuinho:riscuinho:0.0.1
+description: RISCuinho
+
+filesets:
+  rtl:
+    depend:
+      - DuinOS:FPGAMyLib:autoreset
+    files:
+      - ./ControlSistemOperation.v
+      - ./DataBusControl.v
+      - ./DataMemory.v
+      - ./InstructionDecoder.v
+      - ./IntegerBasicALU.v
+      - ./ProgramCountControlUnit.v
+      - ./ProgramMemory.v
+      - ./RegisterBank.v
+      - ./RISCuin.v
+      - ./RISCUIN_Quartus.v
+      - ./config.vh: {is_include_file: true}
+      - ./MemoryMap.vh: {is_include_file: true}
+      - ./prog_32 copy.hex: {is_include_file: true}
+      - ./prog_32.auipc.hex: {is_include_file: true}
+      - ./prog_32.hex: {is_include_file: true}
+      - ./prog_32.StoreLoadEx3.hex: {is_include_file: true}
+
+    file_type: verilogSource
+
+  tb:
+    files:
+      - ./RISCuin_tb.v
+    file_type: verilogSource
+
+  i5:
+    files: [./constraints/colorlight-i5.lpf : {file_type : LPF}]
+
+targets:
+  # The "default" target is special in FuseSoC and used in dependencies.
+  # The "&default" is a YAML anchor referenced later.
+  default: &default
+    filesets:
+      - rtl
+    toplevel: RISCUIN_Quartus
+
+  # The "sim" target simulates the design. (It could have any name.)
+  sim:
+    # Copy all key/value pairs from the "default" target.
+    <<: *default
+    description: Simulate the design
+    default_tool: icarus
+    filesets_append:
+      - tb
+    toplevel: RISCuin_tb
+    tools:
+      icarus:
+        iverilog_options:
+          - -g2012 # Use SystemVerilog-2012
+      modelsim:
+        vlog_options:
+          - -timescale=1ns/1ns
+  colorlight_i5:
+    default_tool : trellis
+    filesets : [rtl, i5]
+    tools:
+      trellis:
+        nextpnr_options : [--25k --package CABGA381 --speed 6 --freq 25 --lpf-allow-unconstrained]
+    toplevel : RISCUIN_Quartus

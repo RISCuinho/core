@@ -1,0 +1,16 @@
+CAPI=2:
+name: DuinOS:FPGAMyLib:autoreset:0.0.1
+description: RISCuinho
+
+filesets:
+  rtl:
+    files:
+      - ./FPGA-MyLIB/AutoReset.v
+    file_type: verilogSource
+
+targets:
+  # The "default" target is special in FuseSoC and used in dependencies.
+  # The "&default" is a YAML anchor referenced later.
+  default: &default
+    filesets:
+      - rtl

@@ -20,9 +20,9 @@ module ProgramMemory #(
    
    
    initial begin
-      $display("Program Memory step %0d, memory word %0d bits, address width %0d bits, total words %0d", 
-                                                                           STEP, (STEP*8), INSTR_ADDR_WIDTH, SIZE);
-      $display("Load prog_%0d.hex",SIZE);
+      // $display("Program Memory step %0d, memory word %0d bits, address width %0d bits, total words %0d", 
+                                                                           // STEP, (STEP*8), INSTR_ADDR_WIDTH, SIZE);
+      // $display("Load prog_%0d.hex",SIZE);
       if(INSTR_ADDR_WIDTH == 5 )
          $readmemh("./prog_32.hex", memory); // carrega um programa de referência   
       else if(INSTR_ADDR_WIDTH == 6 )

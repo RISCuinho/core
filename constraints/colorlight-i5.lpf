@@ -1,0 +1,9 @@
+LOCATE COMP "CLOCK_50"    SITE "P3";
+LOCATE COMP "LED[0]"      SITE "U16"; // LED
+
+LOCATE COMP "LED[1]"      SITE "D20"; // P1 - R0 - RS
+LOCATE COMP "LED[2]"      SITE "F20"; // P1 - G0 - EN
+LOCATE COMP "LED[3]"      SITE "B20"; // P1 - B0 - D4
+LOCATE COMP "LED[4]"      SITE "B19"; // P1 - R1 - D5
+LOCATE COMP "LED[5]"      SITE "B18"; // P1 - G1 - D6
+LOCATE COMP "LED[6]"      SITE "A19"; // P1 - B1 - D7
