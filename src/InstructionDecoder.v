@@ -96,9 +96,9 @@ wire [ 4:0] shamt   = instr[24:20];
 
 assign imm          = SLLI || SRLI || SRAI ? {    27'b0      ,  shamt} :
                       TYPE_I               ? {{20{imm_I[11]}},  imm_I        }  : 
-                      TYPE_B               ? {{19{imm_B[12]}},  imm_B, {1'b0}}  : 
+                      TYPE_B               ? {{18{imm_B[12]}},  imm_B, {1'b0}}  : 
                       TYPE_S               ? {{19{imm_S[11]}},  imm_S        }  : 
-                      TYPE_J               ? {{11{imm_J[20]}},  imm_J, {1'b0}}  : 
+                      TYPE_J               ? {{10{imm_J[20]}},  imm_J, {1'b0}}  : 
                       TYPE_U               ? {    imm_U      ,  {12'b0}      }  : 
                       32'bx;
 
