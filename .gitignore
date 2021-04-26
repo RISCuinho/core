@@ -27,12 +27,6 @@ build/
 transcript
 work/
 
-RISCUIN_Quartus.*
-!RISCUIN_Quartus.htm
-!RISCUIN_Quartus.qpf
-!RISCUIN_Quartus.qsf
-!RISCUIN_Quartus.sdc
-!RISCUIN_Quartus.v
 db/
 incremental_db/
 # Prerequisites
@@ -71,7 +65,6 @@ incremental_db/
 serv_req_info.txt
 
 # Outros arquivos a serem temporáriamente ignorados por hora
-*Quartus*
 *.blif
 *.dot
 *.gtkw

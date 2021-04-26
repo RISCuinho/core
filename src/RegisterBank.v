@@ -23,13 +23,20 @@ begin
    ready <= 1'b0;
 end
 
+wire [BANK_WIDTH:0] mux_idx_rd_sel = (rst && ready) || !ready ? idx : rd_sel;
+
 always @(posedge clk) begin
+
+   if(!rst && ready && reg_w) begin
+      memory[mux_idx_rd_sel] <= rd_data;
+   end   
+   else
    if(rst && ready) begin
       idx  <= 0;
       ready <= 1'b0;
    end 
    else if (!ready) begin
-      memory[idx]  <= {REGISTER_WIDTH{1'b0}};
+      memory[mux_idx_rd_sel]  <= {REGISTER_WIDTH{1'b0}};
       idx          <= idx + 1;
       ready        <= (idx == SIZE);
    end
@@ -42,10 +49,4 @@ assign rs2_data = !ready ? {BANK_WIDTH{1'bx}}    :
                   rs2_sel == {BANK_WIDTH{1'b0}} ? {REGISTER_WIDTH{1'b0}} : 
                   memory[rs2_sel];
 
-always @(posedge clk) begin
-   if(!rst && ready && reg_w) begin
-      memory[rd_sel] <= rd_data;
-   end   
-end
-   
 endmodule

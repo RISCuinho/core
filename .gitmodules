@@ -1,0 +1,3 @@
+[submodule "FPGA-MyLIB"]
+	path = FPGA-MyLIB
+	url = https://github.com/DuinOS/FPGA-MyLIB.git
