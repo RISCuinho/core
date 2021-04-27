@@ -41,18 +41,35 @@ A pasta [examples](./examples) possui exemplos para testes, na sua maioria obtid
 
 A Especificação RISC-V que estou sendo seguindo está disponível no seguinte link: https://github.com/riscv/riscv-isa-manual/releases/tag/Ratified-IMAFDQC, é a versão 20191213.
 
-## Softwares
-### Simulação
+## Simulação
 
 As Simulações estão sendo feitas com IVerilog no Windows 10 com WSL, a condificação é feita no VSCode, e a verificação dos sinais gerados com GTKWave.
 
 As instruções são testadas tanto no ambiente Vicilogic como no simulador [emulsiV](https://carlosdelfino.eti.br/emulsiV)
 
+## Sintese e Hardware
+
+Estou escolhendo algumas ferramentas mais populares e consagradas para sintetizar o RISCuinho e coloca-lo funcionando em um FPGA físico, abaixo listo algumas informações sobre isso.
+
+### GoWin
+
+GoWin é uma empresa de semicondutores chinesa que produz uma linha facinante de FPGA com uma abordagem bastante intrigante que tem causando bastante embaraço na comunidade, já que com sua abordagem consegue reduzir drásticamente o uso de LUTs, pois vem dotado de um grande número de recursos como ALUs e registradores. 
+
+Ainda estou me familiarizando com ela, mas já descobrindo que pode ser uma grande aliada para o RISCuinho.
+
+### TangNano
+
+TangNano é uma placa de prototipação que vem empoderada com um FPGA GW1N-LV1QN48C6/I5, equipado com 1152 LUT4, 1 PLL e um total de  72Kbit SRAM em 4 Block, enpacotado numa QFN48. 
+
+A TangNano disponibiliza todas as portas de forma bem acessível.
+
+![](./docs/images/boards/tang_nano_pinout_v1.0.0_w5676_h4000_large.png)
+
+Também vem com uma PSRAM de 64MBits e possui um conector para LCD RGB e a pinagem para uso com VGA, já vem conectada a um LED RGB também. Além de um cristal de 24Mhz, porta USB Type-C e JTAG.
+
 ### Quartus
 
 Estou usando o Quartus 20.4 Prime Lite Edtion para fazer os testes em uma placa De0-nano.
-
-## Hardware FPGA
 
 ### De0-Nano
 
@@ -61,10 +78,6 @@ Placa de prototipação e estudos da Terasic.
 Estou usando a De0-nano versão 1.6:
 
  * FPGA: Altera Cyclone IV EP4CE22FE22F17C6N
-
-### TangNano
-
-Estou usando também uma [TangNano que pode ser adquirida clickando aqui](https://s.click.aliexpress.com/e/_A8IjxE).
 
 ## Aprendendo e Tirando Dúvidas ao Vivo
 
