@@ -4,11 +4,7 @@ module ProgramMemory #(
 ) (
    input                                  clk,
    input       [INSTR_ADDR_WIDTH-1:0]     pc,
-   output      [(STEP*8)-1:0]             instr,
-   // a memória pode ser grava em circunstãncias especiais
-   input                                  pgm,
-   input       [INSTR_ADDR_WIDTH-1:0]     addr,
-   input       [(STEP*8)-1:0]             data
+   output      [(STEP*8)-1:0]             instr
 );
    localparam SIZE = 2**INSTR_ADDR_WIDTH;
    /* 
@@ -20,9 +16,9 @@ module ProgramMemory #(
    
    
    initial begin
-      $display("Program Memory step %0d, memory word %0d bits, address width %0d bits, total words %0d", 
-                                                                           STEP, (STEP*8), INSTR_ADDR_WIDTH, SIZE);
-      $display("Load prog_%0d.hex",SIZE);
+  //    $display("Program Memory step %0d, memory word %0d bits, address width %0d bits, total words %0d", 
+//                                                                           STEP, (STEP*8), INSTR_ADDR_WIDTH, SIZE);
+ //     $display("Load prog_%0d.hex",SIZE);
       if(INSTR_ADDR_WIDTH == 5 )
          $readmemh("../memory/prog_32.hex", memory); // carrega um programa de referência   
       else if(INSTR_ADDR_WIDTH == 6 )
@@ -34,8 +30,5 @@ module ProgramMemory #(
    end
 
    assign instr = memory[pc];  
-   always @(posedge clk) begin
-      if(pgm) memory[addr] <= data;
-   end
 
 endmodule

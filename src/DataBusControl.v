@@ -3,7 +3,6 @@
 module DataBusControl (
    input      rst,
    input      clk, wd, rd, 
-   output reg ready, 
    output reg busy,
 
    input      [1:0]            size_in, size_out,
@@ -41,7 +40,7 @@ wire [`DBC_RAM_ADDR_WIDTH-1:0] local_ram_addr_in  = ram_addr_out ?
  
 wire dbc_register_addrs = addr_out >= `DBC_REGISTER_START && addr_out <= `DBC_REGISTER_END;
 
-assign local_data_out = (!rst && ready && !busy && ram_addr_out && rd)  ?
+assign local_data_out = (!rst && !busy && ram_addr_out && rd)  ?
                        size_out == 2'b00 ? {24'b0, memory_tmp_out[ 7:0]} :
                        size_out == 2'b01 ? {16'b0, memory_tmp_out[15:0]} :
                        size_out == 2'b10 ? memory_tmp_out : 32'b0 : 
@@ -51,7 +50,7 @@ assign data_out = dbc_register_addrs                                    ? // end
 						
                   (addr_out == `DBC_REGISTER_MISALIGNED_EXCEPTION_ADDR || // registrador desalinhamento
 						 addr_out == `DBC_REGISTER_EMPTY_ADDR_EXCPETION_ADDR) ?  // registrador endereço vazio/invalido
-                   dbc_register[31:0]                                   : 
+                   dbc_register[1:0]                                   : 
 						
                    32'b1                                   :  // default para registradores dbc 
 
@@ -59,8 +58,8 @@ assign data_out = dbc_register_addrs                                    ? // end
 
 always @(posedge clk ) begin
    dbc_register[`DBC_REGISTER_EMPTY_ADDR_EXCEPTION_START_BIT] <=
-                                 !ram_addr_out && !ram_addr_in  &&
-                                 !dbc_register_addrs ; 
+                                 (!ram_addr_out && !ram_addr_in  &&
+                                 !dbc_register_addrs) ; 
    // Lança uma exception se o endereço de memória estiver desalinhado
    // half-word cuida apenas do primeiro bit menos significativo 
    // word dos dois bits menos significativos.
@@ -79,16 +78,14 @@ end
 // pode se usar BRAM mas melhor que use a DRAM que acompanha a placa
 // se HUB75 também, já a TANG Nano preciso verificar.
 initial begin
-   local_rst <= 1'bx;
-   busy <= 1'bx;
-   local_busy <= 1'bx;
-   ready <= 1'b1;
+   local_rst <= 1'b0;
+   busy <= 1'b0;
+   local_busy <= 1'b0;
 end
 
 always @(*) begin
 // busy não é usado exernamente ainda.
-//     busy <= local_busy;
-      busy <=1'b0;
+     busy <= local_busy;
      dbc_register[`DBC_REGISTER_BUS_BUSY_START_BIT] <= local_busy;
 end
 
@@ -97,32 +94,31 @@ always @(posedge clk) begin
     memory_tmp_out <= memory[local_ram_addr_out]; // port 2
 
   if(rd) begin
-      $display("Memoria out 0h%08h => 0h%08h", addr_out, memory_tmp_out);
-      $display("Registradores: %b",dbc_register_addrs);
+//      $display("Memoria out 0h%08h => 0h%08h", addr_out, memory_tmp_out);
+ //     $display("Registradores: %b",dbc_register_addrs);
    end
+/*
   if(!rst && local_busy === 1'bx )begin
-      ready <= 1'b1;
       local_busy <= 1'b1;
    end
-   else if(!rst && ready && local_busy)begin
+*/
+   else if(!rst && local_busy)begin
       local_busy <= 1'b0;
    end
 end
 
 always @(posedge clk) begin
+   memory_tmp_in  <= memory[local_ram_addr_in];  // port 1
 
-    memory_tmp_in  <= memory[local_ram_addr_in];  // port 1
-
-   if(!rst && ready && !local_busy && ram_addr_in)begin
+   if(!rst && !local_busy && ram_addr_in)begin
       if(wd) begin
          //local_busy <= 1'b1;
-         
          memory[local_ram_addr_in] <= size_in == 2 ? data_in :
                                       size_in == 1 ? {memory_tmp_in[31:16],data_in[15:0]} :
                                       size_in == 0 ? {memory_tmp_in[31:8],data_in[7:0]} :
                                                      memory_tmp_in;
                                                      
-         $display("Memoria in 0h%08h <= 0h%08h", local_ram_addr_in, memory_tmp_in);
+//         $display("Memoria in 0h%08h <= 0h%08h", local_ram_addr_in, memory_tmp_in);
       end
    end
 

@@ -5,24 +5,10 @@ module RISCuin(
    input clk, rst, 
    output pc_end);
 
-localparam TYPE_B       = 7'b1100011;
-localparam TYPE_IJ      = 7'b1100111;
-localparam TYPE_J       = 7'b1101111;
-
-localparam JAL     = {7'b0000000, 3'b000, TYPE_J      }; // b0000-0000-0110-1111  h006F
-localparam JALR    = {7'b0000000, 3'b000, TYPE_IJ     }; // b0000-0000-0110-0111  h0067
-
-localparam BEQ     = {7'b0000000, 3'b000, TYPE_B      }; // b0000-0000-0110-0011  h0063
-localparam BNE     = {7'b0000000, 3'b001, TYPE_B      }; // b0000-0000-1110-0011  h00E3 
-localparam BLT     = {7'b0000000, 3'b100, TYPE_B      }; // b0000-0010-0110-0011  h0263
-localparam BGE     = {7'b0000000, 3'b101, TYPE_B      }; // b0000-0010-1110-0011  h02E3
-localparam BLTU    = {7'b0000000, 3'b110, TYPE_B      }; // b0000-0011-0110-0011  h0363
-localparam BGEU    = {7'b0000000, 3'b111, TYPE_B      }; // b0000-0011-1110-0011  h03E3
-
-wire rb_ready, alu_sel, bus_ready, bus_w, bus_r, bus_busy, unsigned_value;
+wire /*rb_ready,*/ alu_sel, bus_w, bus_r, bus_busy, unsigned_value;
 wire [1:0]  bus_size;
 
-wire local_rst = rst | ~rb_ready;
+wire local_rst = rst /*| ~rb_ready*/;
 
 wire branch, load_pc;
 
@@ -34,33 +20,36 @@ wire [31:0] rs1_data, rs2_data, alu_out;
 wire [31:0] data_in, data_out, data_eei;
 wire [31:0] imm;
 
-wire [15:0] op_code;
+wire [4:0] alu_opcode;
 
 wire imm_rs2_sel;
 
 wire [`INSTR_ADDR_WIDTH-1:0] pc, pc_plus, pc_next;
 wire [`INSTR_ADDR_WIDTH-1:0] pc_branch =  alu_out[`INSTR_ADDR_WIDTH-1:2];
 wire [`INSTR_ADDR_WIDTH+1:0] pc_ext = {pc,2'b00};
-wire pc_enable = !rst && bus_ready && rb_ready && !pc_end && !bus_busy;
+wire pc_enable = !rst /*&& rb_ready&*/ && !pc_end && !bus_busy;
 
-reg pgm;
+//reg pgm;
 wire [31:0] instr;
 
+/*
 initial begin
    pgm <= 1'b0;
    //$monitor("Program Counter: %h",pc_ext);
 end
+*/
 
 wire [31:0] alu_A       = branch || load_pc ? {pc,2'b0}  : rs1_data;
 wire [31:0] alu_B       = imm_rs2_sel       ? imm        : rs2_data;
 
+`include "IntegerBasicALU_OPCode.vh"
 wire do_branch =  branch ?
-                     op_code == BEQ    ?         rs1_data  ==         rs2_data :
-                     op_code == BNE    ?         rs1_data  !=         rs2_data :
-                     op_code == BLT    ? $signed(rs1_data) <  $signed(rs2_data) :
-                     op_code == BGE    ? $signed(rs1_data) >  $signed(rs2_data) :
-                     op_code == BLTU   ?         rs1_data  <          rs2_data :
-                     op_code == BGEU   ?         rs1_data  >          rs2_data :
+                     alu_opcode == `B_EQ    ?         rs1_data  ==         rs2_data :
+                     alu_opcode == `B_NE    ?         rs1_data  !=         rs2_data :
+                     alu_opcode == `B_LT    ? $signed(rs1_data) <  $signed(rs2_data) :
+                     alu_opcode == `B_GE    ? $signed(rs1_data) >  $signed(rs2_data) :
+                     alu_opcode == `B_LTU   ?         rs1_data  <          rs2_data :
+                     alu_opcode == `B_GEU   ?         rs1_data  >          rs2_data :
                                                          1'b0:
                                                          load_pc;
 //   00 -> alu
@@ -111,14 +100,33 @@ ProgramCountControlUnit #(.INSTR_ADDR_WIDTH(`INSTR_ADDR_WIDTH))
    Memória de programa
    Este core usa Arquitetura Havard
  */
-ProgramMemory #(.INSTR_ADDR_WIDTH(`INSTR_ADDR_WIDTH)) 
-                     prog_m(.clk(clk), 
-                            .pc(pc), .pgm(pgm), .instr(instr));
+//ProgramMemory #(.INSTR_ADDR_WIDTH(`INSTR_ADDR_WIDTH)) 
+//                     prog_m(.clk(clk), 
+//                            .pc(pc), .instr(instr));
+localparam SIZE = 2**`INSTR_ADDR_WIDTH;
+reg [(4*8)-1:0] memory [0:SIZE-1]; 
+   
+   
+   initial begin
+  //    $display("Program Memory step %0d, memory word %0d bits, address width %0d bits, total words %0d", 
+//                                                                           STEP, (STEP*8), INSTR_ADDR_WIDTH, SIZE);
+ //     $display("Load prog_%0d.hex",SIZE);
+      if(`INSTR_ADDR_WIDTH == 5 )
+         $readmemh("../memory/prog_32.hex", memory); // carrega um programa de referência   
+      else if(`INSTR_ADDR_WIDTH == 6 )
+         $readmemh("../memory/prog_64.hex", memory); // carrega um programa de referência   
+      else if(`INSTR_ADDR_WIDTH == 7 )
+         $readmemh("../memory/prog_128.hex", memory); // carrega um programa de referência   
+      else if(`INSTR_ADDR_WIDTH == 8 )
+         $readmemh("../memory/prog_254.hex", memory); // carrega um programa de referência   
+   end
+
+   assign instr = memory[pc];  
 
 /* ########
    Decodificador de instruções RV32I básico.
  */
-IntegerBasicInstructionDecoder ib_id(.instr(instr), .op_code(op_code), 
+InstructionDecoderRV32I idRV32I(.instr(instr), .alu_opcode(alu_opcode), 
                         .alu_sel(alu_sel), .branch(branch), .load_pc(load_pc),
                         .rs1_sel(rs1_sel), .rs2_sel(rs2_sel), .rd_sel(rd_sel), 
                         .rd_data_sel(rd_data_sel),
@@ -131,7 +139,7 @@ IntegerBasicInstructionDecoder ib_id(.instr(instr), .op_code(op_code),
 /* #######
    Banco de Registradores
  */                     
-RegisterBank rb(.clk(clk), .rst(rst), .ready(rb_ready), 
+RegisterBank rb(.clk(clk), .rst(rst), /*.ready(rb_ready),*/ 
                   .rs1_sel(rs1_sel), .rs2_sel(rs2_sel), .rd_sel(rd_sel), .reg_w(reg_w),
                   .rs1_data(rs1_data), .rs2_data(rs2_data), .rd_data(rd_data));
 
@@ -141,7 +149,7 @@ RegisterBank rb(.clk(clk), .rst(rst), .ready(rb_ready),
  */
 IntegerBasicALU #(.DATA_WIDTH(`INTERNAL_DATA_WIDTH)) ib_alu(
    .E(alu_sel && !local_rst),
-   .alu_op(op_code),
+   .alu_op(alu_opcode),
    .A(alu_A), .B(alu_B),
    .out(alu_out)
 );
@@ -158,7 +166,6 @@ IntegerBasicALU #(.DATA_WIDTH(`INTERNAL_DATA_WIDTH)) ib_alu(
 DataBusControl data_m_ctl(
                         .rst(local_rst),
                         .clk(clk), 
-                        .ready(bus_ready), .busy(bus_busy),
                         .wd(bus_w), .rd(bus_r),
                         .size_in(bus_size), .size_out(bus_size),
                         .addr_in(bus_w?alu_out:{32'bz}), .addr_out(bus_r?alu_out:{32'bz}),
@@ -188,7 +195,7 @@ ControlSistemOperation cso(
 IVerilogInstructionTable iverilog_it(
                         .rst(local_rst),
                         .clk(clk),
-                        .instr(instr), .full_op_code(op_code), 
+                        .instr(instr), .full_alu_opcode(alu_opcode), 
                         .rs1_sel(rs1_sel), .rs2_sel(rs2_sel), .rd_sel(rd_sel), 
                         .rd_data_sel(rd_data_sel),
                         .rs1_data(rs1_data), .rs2_data(rs2_data), .rd_data(rd_data),

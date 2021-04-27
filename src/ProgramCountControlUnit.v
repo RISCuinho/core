@@ -10,7 +10,7 @@ module ProgramCountControlUnit #(
 );
 
 initial begin
-   $display("Contador de programa com comprimento de %d bits",INSTR_ADDR_WIDTH);
+//   $display("Contador de programa com comprimento de %d bits",INSTR_ADDR_WIDTH);
    pc       = {INSTR_ADDR_WIDTH{1'b0}};  
 end
 

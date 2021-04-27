@@ -1,0 +1,19 @@
+//Copyright (C)2014-2021 Gowin Semiconductor Corporation.
+//All rights reserved.
+//File Title: User Flash Initialization File
+//GOWIN Version: V1.9.7.02Beta
+//Part Number: GW1N-LV1QN48C6/I5
+//Device-package: GW1N-1-QFN48-6
+//Flash Type: FLASH96K
+//File Format: Hex
+//Created Time: 2021-04-26 22:24:52
+[0:0] 02000093
+[0:1] C0000137
+[0:2] 0000C183
+[0:3] 00018863
+[0:4] 00310023
+[0:5] 00108093
+[0:6] ff1ff06f
+[0:7] 0000006f
+[0:8] 6c6c6548
+[0:9] 0000006f
