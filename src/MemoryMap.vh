@@ -36,3 +36,15 @@ https://github.com/DuinOS/riscuinho/wiki/DataBusControlRegister
 `define DBC_REGISTER_LAST_DATA_BITS					128   
 `define DBC_REGISTER_LAST_DATA_START_BIT			0   // bit 1
 `define DBC_REGISTER_LAST_DATA_END_BIT				127
+
+`ifndef DBC_GPIO_ADDR_START
+`warning "Definindo GPIO Start"
+`define DBC_GPIO_ADDR_START 32'h05000000
+`endif
+`ifndef DBC_GPIO_ADDR_END
+`warning "Definindo GPIO End"
+`define DBC_GPIO_ADDR_END   32'h05000000
+`endif
+
+`define GPIO_ADDR_SIZE  (((`DBC_GPIO_ADDR_END - `DBC_GPIO_ADDR_START)+1)*32)
+`define GPIO_WIDTH      ((`GPIO_ADDR_SIZE))

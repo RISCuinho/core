@@ -3,7 +3,9 @@
 
 module RISCuin(
    input clk, rst, 
-   output pc_end);
+   output pc_end,
+   inout [`GPIO_WIDTH-1:0] gpio
+);
 
 wire /*rb_ready,*/ alu_sel, bus_w, bus_r, bus_busy, unsigned_value;
 wire [1:0]  bus_size;
@@ -169,7 +171,9 @@ DataBusControl data_m_ctl(
                         .wd(bus_w), .rd(bus_r),
                         .size_in(bus_size), .size_out(bus_size),
                         .addr_in(bus_w?alu_out:{32'bz}), .addr_out(bus_r?alu_out:{32'bz}),
-                        .data_in(data_in), .data_out(data_out));
+                        .data_in(data_in), .data_out(data_out),
+                        .gpio(gpio)
+);
 
 
 /* ########

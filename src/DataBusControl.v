@@ -10,9 +10,14 @@ module DataBusControl (
    input      [31:0]           addr_in, addr_out,
 	
    input      [31:0]				 data_in, 
-   output     [31:0] 			 data_out
+   output     [31:0] 			 data_out,
+   inout      [`GPIO_WIDTH-1:0] gpio
 );
 
+initial begin
+   $display("GPIO total size: %d, total word (32bits) %d, GPIO BUS WIDTH: %d", 
+                               `GPIO_ADDR_SIZE, `GPIO_ADDR_SIZE/32, `GPIO_WIDTH);
+end
 
 wire [31:0] local_data_out;
 
@@ -30,6 +35,8 @@ wire ram_addr_out = (addr_out >= `DBC_RAM_START       && addr_out <= `DBC_RAM_EN
                     (addr_out >= `DBC_RAM_GLASS_START && addr_out <= `DBC_RAM_GLASS_END); 
 wire ram_addr_in  = (addr_in  >= `DBC_RAM_START       && addr_in  <= `DBC_RAM_END) ||
                     (addr_in  >= `DBC_RAM_GLASS_START && addr_in  <= `DBC_RAM_GLASS_END);
+wire gpio_addr_out = (addr_out >= `DBC_GPIO_ADDR_START && addr_out <= `DBC_GPIO_ADDR_END) ; 
+wire gpio_addr_in  = (addr_in  >= `DBC_GPIO_ADDR_START && addr_in  <= `DBC_GPIO_ADDR_END);
 
 wire [`DBC_RAM_ADDR_WIDTH-1:0] local_ram_addr_out = ram_addr_out ? 
                                                    addr_out[`DBC_RAM_ADDR_WIDTH-1:0]: 
@@ -40,11 +47,38 @@ wire [`DBC_RAM_ADDR_WIDTH-1:0] local_ram_addr_in  = ram_addr_out ?
  
 wire dbc_register_addrs = addr_out >= `DBC_REGISTER_START && addr_out <= `DBC_REGISTER_END;
 
+
+wire [32:0] local_gpio_pos_in  = (addr_in -`DBC_GPIO_ADDR_START)*32;
+wire [32:0] local_gpio_pos_out  = (addr_out -`DBC_GPIO_ADDR_START)*32;
+
 assign local_data_out = (!rst && !busy && ram_addr_out && rd)  ?
                        size_out == 2'b00 ? {24'b0, memory_tmp_out[ 7:0]} :
                        size_out == 2'b01 ? {16'b0, memory_tmp_out[15:0]} :
                        size_out == 2'b10 ? memory_tmp_out : 32'b0 : 
                        32'b0;
+
+wire [31:0] local_gpio_out = (!rst && !busy && gpio_addr_out && rd)  ?
+                     size_out == 2 ?  {       gpio[local_gpio_pos_out +: 32]} :
+                     size_out == 1 ?  {16'b0, gpio[local_gpio_pos_out +: 16]} :
+                     size_out == 0 ?  {24'b0, gpio[local_gpio_pos_out +:  8]} :
+                                       32'b0  :
+                                       32'b0;
+
+wire [31:0] local_gpio_32_in = (!rst && !local_busy && gpio_addr_in && wd)?
+                                 size_in == 2 ?   data_in :
+                                 size_in == 1 ?  {gpio[local_gpio_pos_in +: 16], data_in[15:0]}:
+                                 size_in == 0 ?  {gpio[local_gpio_pos_in +: 24], data_in[ 7:0]}:
+                                                  32'b0:
+                                      32'b0;
+
+assign gpio = (!rst && !local_busy && gpio_addr_in && wd) ? 
+                                gpio :
+                                gpio;
+
+/*
+assign gpio[local_gpio_pos_in +:  8] (!rst && !local_busy && gpio_addr_in && wd) ?data_in[7:0];
+assign gpio[local_gpio_pos_in +: 16]
+*/
 
 assign data_out = dbc_register_addrs                                    ? // endereços dos registradores dbc
 						
@@ -54,7 +88,10 @@ assign data_out = dbc_register_addrs                                    ? // end
 						
                    32'b1                                   :  // default para registradores dbc 
 
-						local_data_out                                       ;  // outro dado endereçado
+                  gpio_addr_out                                         ?
+                  local_gpio_out                                        :
+                  
+                  local_data_out                                       ;  // outro dado endereçado
 
 always @(posedge clk ) begin
    dbc_register[`DBC_REGISTER_EMPTY_ADDR_EXCEPTION_START_BIT] <=
@@ -108,11 +145,12 @@ always @(posedge clk) begin
 end
 
 always @(posedge clk) begin
-   memory_tmp_in  <= memory[local_ram_addr_in];  // port 1
+
 
    if(!rst && !local_busy && ram_addr_in)begin
       if(wd) begin
          //local_busy <= 1'b1;
+         memory_tmp_in  <= memory[local_ram_addr_in];  // port 1
          memory[local_ram_addr_in] <= size_in == 2 ? data_in :
                                       size_in == 1 ? {memory_tmp_in[31:16],data_in[15:0]} :
                                       size_in == 0 ? {memory_tmp_in[31:8],data_in[7:0]} :
@@ -121,7 +159,5 @@ always @(posedge clk) begin
 //         $display("Memoria in 0h%08h <= 0h%08h", local_ram_addr_in, memory_tmp_in);
       end
    end
-
 end
-
 endmodule
