@@ -1,6 +1,6 @@
 // Mapeamento de Memória para DBC - Data Busc Control
 `define DBC_RAM_START          							32'h00000000
-`define DBC_RAM_END            							32'h000001FF
+`define DBC_RAM_END            							32'h000000FF
 `define DBC_RAM_SIZE											(`DBC_RAM_END - `DBC_RAM_START)
 `define DBC_RAM_ADDR_WIDTH                         ($clog2(`DBC_RAM_END - `DBC_RAM_START+1))
 
