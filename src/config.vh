@@ -1,3 +1,6 @@
+`define __TANGNANO__ TRUE
+`define __GOWIN__    TRUE
+
 // Configuration File
 `ifdef __ICARUS__
 `define SIMULATOR 1

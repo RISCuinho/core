@@ -1,10 +1,4 @@
-`define __TANGNANO__ TRUE
-`define __GOWIN__    TRUE
-
-// O QUE IMPORTA O ENDEREÇO, MAS O TAMANHO.
-`define DBC_GPIO_ADDR_START 32'h05000000
-`define DBC_GPIO_ADDR_END   32'h05000000
-
+`include "config.vh"
 `include "MemoryMap.vh"
 
 module RISCUIN_TangNano(

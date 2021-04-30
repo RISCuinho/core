@@ -1,3 +1,4 @@
+`include "config.vh"
 `include "MemoryMap.vh"
 
 module DataBusControl (
