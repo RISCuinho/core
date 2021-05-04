@@ -12,46 +12,19 @@ module RegisterBank #(
 
 localparam SIZE = 2**BANK_WIDTH;
 
-reg [REGISTER_WIDTH-1:0] memory [0:SIZE-1];
+reg [REGISTER_WIDTH-1:0] registerFile [0:SIZE-1]; //* synthesis syn_ramstyle = "block_ram" */;
 
-reg [BANK_WIDTH:0] idx;
-
-initial 
-begin
-//   $display("Register Bank with %d registers", SIZE);
-   /*
-   idx = {BANK_WIDTH{1'b0}};
-   ready <= 1'b0;
-   */
-end
-
-//wire [BANK_WIDTH:0] mux_idx_rd_sel = (rst && ready) || !ready ? idx : rd_sel;
 
 always @(posedge clk) begin
 
-   if(!rst /*&& ready*/ && reg_w) begin
-//      memory[mux_idx_rd_sel] <= rd_data;
-      memory[rd_sel] <= rd_data;
-   end   
-/*
-   else
-   if(rst && ready) begin
-      idx  <= 0;
-      ready <= 1'b0;
-   end 
-   else if (!ready) begin
-      memory[mux_idx_rd_sel]  <= {REGISTER_WIDTH{1'b0}};
-      idx          <= idx + 1;
-      ready        <= (idx == SIZE);
-   end
-*/
+   if(!rst && reg_w) begin 
+      registerFile[rd_sel] <= rd_data;
+   end    
 end
 
-assign rs1_data = /*!ready ? {BANK_WIDTH{1'bx}}    :*/
-                  rs1_sel == {BANK_WIDTH{1'b0}} ? {REGISTER_WIDTH{1'b0}} : 
-                  memory[rs1_sel];
-assign rs2_data = /*!ready ? {BANK_WIDTH{1'bx}}    :*/
-                  rs2_sel == {BANK_WIDTH{1'b0}} ? {REGISTER_WIDTH{1'b0}} : 
-                  memory[rs2_sel];
+assign rs1_data = rs1_sel == {BANK_WIDTH{1'b0}} ? {REGISTER_WIDTH{1'b0}} : 
+                  registerFile[rs1_sel];
+assign rs2_data = rs2_sel == {BANK_WIDTH{1'b0}} ? {REGISTER_WIDTH{1'b0}} : 
+                  registerFile[rs2_sel];
 
 endmodule

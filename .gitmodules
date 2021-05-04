@@ -1,3 +1,6 @@
 [submodule "FPGA-MyLIB"]
-	path = FPGA-MyLIB
+	path = lib/FPGA-MyLIB
 	url = https://github.com/DuinOS/FPGA-MyLIB.git
+[submodule "RoaLogic_memory"]
+	path = lib/memory
+	url = https://github.com/RoaLogic/memory

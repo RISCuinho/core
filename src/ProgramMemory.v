@@ -12,7 +12,7 @@ module ProgramMemory #(
     * assim o ponteiro poderá ser incrementado conforme 
     * este grupo e reduzir o tamanho do barramento.
     */
-   reg [(STEP*8)-1:0] memory [0:SIZE-1]; 
+   reg [(STEP*8)-1:0] memory [0:SIZE-1]; //* synthesis syn_romstyle=block_rom */; 
    
    
    initial begin

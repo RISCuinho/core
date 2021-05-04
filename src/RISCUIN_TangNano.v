@@ -40,15 +40,15 @@ module RISCUIN_TangNano(
    wire rst;
    wire [`GPIO_WIDTH-1:0] local_gpio;
 
-   AutoReset aRst(.clk(SYS_CLK), .count(35), .clr(SYS_RSTn), .rst(rst)); 
-   RISCuin cpu(.clk(SYS_CLK), .rst(rst), .pc_end(LED_G), .gpio(local_gpio));
+   AutoReset aRst(.clk(SYS_CLK), .count(35), .clr(!SYS_RSTn), .rst(rst)); 
+   RISCuin cpu(.clk(SYS_CLK), .rst(rst), .pc_end(LED_R), .gpio(local_gpio));
 
-   assign LED_R = local_gpio[16];
-//   assign LED_G = local_gpio[17];
-   assign LED_B = local_gpio[18];
+//   assign LED_R = local_gpio[8];
+   assign LED_G = local_gpio[9];
+   assign LED_B = local_gpio[10];
 
    always @(posedge SYS_CLK)begin
-      if(!SYS_RSTn)begin
+      if(SYS_RSTn)begin
         GPIO_D <= local_gpio[7:0];
       end
    end

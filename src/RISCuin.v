@@ -149,6 +149,7 @@ IntegerBasicALU #(.DATA_WIDTH(`INTERNAL_DATA_WIDTH)) ib_alu(
 DataBusControl data_m_ctl(
                         .rst(local_rst),
                         .clk(clk), 
+                        .busy(bus_busy),
                         .wd(bus_w), .rd(bus_r),
                         .size(bus_size),
                         .addr(alu_out),
