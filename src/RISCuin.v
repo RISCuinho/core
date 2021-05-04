@@ -104,7 +104,8 @@ ProgramCountControlUnit #(.INSTR_ADDR_WIDTH(`INSTR_ADDR_WIDTH))
  */
 ProgramMemory #(.INSTR_ADDR_WIDTH(`INSTR_ADDR_WIDTH)) 
                      prog_m(.clk(clk), 
-                            .pc(pc), .instr(instr));
+                            .pc(pc), .instr(instr)) /* synthesis syn_ramstyle = "block_rom" */; // diretiva especifica do GoWin para sinteizar BSRAN
+
 
 /* ########
    Decodificador de instruções RV32I básico.

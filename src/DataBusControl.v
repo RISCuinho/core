@@ -42,11 +42,12 @@ rl_ram_1r1w_generic #(
                  .ABITS(`DBC_RAM_ADDR_WIDTH),
                  .DBITS(`DBC_RAM_DATA_SIZE)) 
           memory(.rst_ni(rst), .clk_i(clk), .we_i(is_ram_addr && wd),
-                 .waddr_i(ram_addr[`DBC_RAM_ADDR_WIDTH-1:2]),
+                 .waddr_i({ram_addr[`DBC_RAM_ADDR_WIDTH-1:2],2'b0}),
                  .be_i(ram_byte_select),
                  .din_i(data_in),
-                 .raddr_i(ram_addr[`DBC_RAM_ADDR_WIDTH-1:2]),
-                 .dout_o(data_out));
+                 .raddr_i({ram_addr[`DBC_RAM_ADDR_WIDTH-1:2],2'b0}),
+                 .dout_o(data_out));  /* synthesis syn_ramstyle = "no_rw_check,block_ram" */; // diretiva especifica do GoWin para sinteizar BSRAN
+
 
 assign gpio = (is_gpio_addr && wd)? data_out[`GPIO_WIDTH-1:0] : {`GPIO_WIDTH{1'bz}} ;
 
