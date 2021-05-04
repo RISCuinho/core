@@ -5,7 +5,7 @@ module RISCuin(
    input clk, rst, 
    output pc_end);
 
-wire /*rb_ready,*/ alu_sel, bus_w, bus_r, bus_busy, unsigned_value;
+wire /*rb_ready,*/ alu_sel, bus_w, bus_r, unsigned_value;
 wire [1:0]  bus_size;
 
 wire local_rst = rst /*| ~rb_ready*/;
@@ -27,7 +27,7 @@ wire imm_rs2_sel;
 wire [`INSTR_ADDR_WIDTH-1:0] pc, pc_plus, pc_next;
 wire [`INSTR_ADDR_WIDTH-1:0] pc_branch =  alu_out[`INSTR_ADDR_WIDTH-1:2];
 wire [`INSTR_ADDR_WIDTH+1:0] pc_ext = {pc,2'b00};
-wire pc_enable = !rst /*&& rb_ready&*/ && !pc_end && !bus_busy;
+wire pc_enable = !rst /*&& rb_ready&*/ && !pc_end;
 
 //reg pgm;
 wire [31:0] instr;

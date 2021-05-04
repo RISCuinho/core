@@ -5,7 +5,7 @@
     <Version>5</Version>
     <Device name="GW1N-1" pn="GW1N-LV1QN48C6/I5">gw1n1-004</Device>
     <FileList>
-        <File path="FPGA-MyLIB/AutoReset.v" type="file.verilog" enable="1"/>
+        <File path="lib/FPGA-MyLIB/AutoReset.v" type="file.verilog" enable="1"/>
         <File path="src/ControlSistemOperation.v" type="file.verilog" enable="1"/>
         <File path="src/DataBusControl.v" type="file.verilog" enable="1"/>
         <File path="src/DataMemory.v" type="file.verilog" enable="1"/>
@@ -26,6 +26,6 @@
         <File path="src/RISCuin_TangNano.gpa" type="file.gpa" enable="1"/>
         <File path="src/RISCuin_TangNano.gsc" type="file.gsc" enable="1"/>
         <File path="memory/prog_32.hex" type="file.other" enable="1"/>
-        <File path="src/RISCuin.fi" type="file.fi" enable="1"/>
+        <File path="src/RISCuin.fi" type="file.other" enable="1"/>
     </FileList>
 </Project>
