@@ -4,3 +4,5 @@
 Neste branch desenvolvo o hardware e algoritmo de funcionamento da instrução PAUSE, esta intrução é um HINT que indica que o corrente hart deve ter seu clock reduzido ou ou suspenso temporáriamente. 
 
 Detalhes podem ser obtidos no capitulo 4 na RISC-V SPEC Draft 2021-04-02
+
+0000 0001 0000 00000 000 00000 0001111 PAUSE
