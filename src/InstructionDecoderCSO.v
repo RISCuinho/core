@@ -1,4 +1,4 @@
-module ControlSistemOperation (
+module InstructionDecoderCSO (
    input        E,
    input [31:0] instr,
    output [ 4:0] rd_sel, rs1_sel,

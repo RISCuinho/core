@@ -1,4 +1,4 @@
-module ZihintpauseInstructionDecoder(
+module InstructionDecoderZihintpause(
    input  [31:0] instr,
    output        pause
    );
@@ -27,7 +27,7 @@ assign pause = TYPE_IF       &&
 
 endmodule
 
-module IntegerBasicInstructionDecoder (
+module InstructionDecoderRV32I (
    input  [31:0] instr,
    output [15:0] op_code,
 
