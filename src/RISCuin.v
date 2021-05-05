@@ -118,7 +118,7 @@ ProgramMemory #(.INSTR_ADDR_WIDTH(`INSTR_ADDR_WIDTH))
 /* ########
    Decodificador de instruções RV32I básico.
  */
-IntegerBasicInstructionDecoder ib_id(.instr(instr), .op_code(op_code), 
+InstructionDecoderRV32I id_rv32i(.instr(instr), .op_code(op_code), 
                         .alu_sel(alu_sel), .branch(branch), .load_pc(load_pc),
                         .rs1_sel(rs1_sel), .rs2_sel(rs2_sel), .rd_sel(rd_sel), 
                         .rd_data_sel(rd_data_sel),
