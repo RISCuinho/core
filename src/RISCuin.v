@@ -170,9 +170,9 @@ DataBusControl data_m_ctl(
    CONTROL
    SYSTEM
  */
-`ifdef RISCUIN_ControlSistemOperation
+`ifdef RISCUIN_ControlSystemOperation
 wire cso_e = 1'b1;
-ControlSistemOperation cso(
+InstructionDecoderCSO id_cso(
    E(cso_e),
    instr(instr),
    .rd_sel(rd_sel), .rs1_sel(.rs1_sel),
