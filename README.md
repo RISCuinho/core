@@ -25,6 +25,10 @@ I will use Portuguese as the official language of this project, but English can 
 
 Eu usarei o português como idioma oficial deste projeto, porém o inglês também pode ser usado para solicitações de informações e sugestões.
 
+## Repositório em uma nova Organização
+
+O Repositório do RISCuinho foi alterado para uma [nova Organização](https://github.com/RISCuinho), assim os repositórios relativos a projetos de Hardware com FPGA e do RISCuinho especificamente ficarão melhor organizado. o DuinOS ficará especificamente com projetos RTOS em especial para Arduino e similares, isso inclui o RISCuinho. O repositório principal do projeto agora tem novo nome, agora chamado ["core"](https://github.com/RISCuinho/core), e serão criados repositórios complementáres. Bibliotecas como FPGA-MyLib serão revistas e póderão ter seu nome alterado.
+
 ## Arquitetura do Microcontrolador
 
 O **RISC**uinho (Risquinho) usa aa Arquitetura Havard simples, com a memória de programa espelhada no endereço de memória de dados, para que possa ser reprogramada a aquente e demonstrar recursos modernos de microcontroladores que possuem tal recurso, isso será discutido futuramente em documentação apropriada.
