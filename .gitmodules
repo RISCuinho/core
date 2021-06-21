@@ -1,3 +1,6 @@
-[submodule "FPGA-MyLIB"]
-	path = lib/FPGA-MyLIB
-	url = https://github.com/DuinOS/FPGA-MyLIB.git
+[submodule "examples"]
+	path = examples
+	url = https://github.com/RISCuinho/exemplos
+[submodule "LibFPGA"]
+	path = lib/LibFPGA
+	url = https://github.com/RISCuinho/LibFPGA
