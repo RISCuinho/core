@@ -36,7 +36,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Instal iVerilog
-        run: apt install iverilog
+        run: apt install iverilog binutils
 
       - name: Make Tests
         run: make tests
