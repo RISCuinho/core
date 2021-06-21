@@ -1,6 +1,6 @@
 [submodule "examples"]
 	path = examples
 	url = https://github.com/RISCuinho/exemplos
-[submodule "FPGA-MyLIB"]
-	path = lib/FPGA-MyLIB
+[submodule "LibFPGA"]
+	path = lib/LibFPGA
 	url = https://github.com/RISCuinho/LibFPGA
