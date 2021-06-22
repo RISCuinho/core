@@ -17,11 +17,14 @@ on:
   pull_request:
     branches: [ beta_x.0 ]
     paths-ignore:
+      - docs/
+      - examples/
       - .gitignore
       - README.md
       - LICENSE
-      - examples/
-      - docs/
+      - CONTRIBUTING.md
+      - CODE_OF_CONDUCT.md
+      - SECURITY.md
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
