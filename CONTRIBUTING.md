@@ -15,3 +15,5 @@ No RISCuinho não usamos `tabs` mas espapaços para indentação, portanto ao id
 Caso identifique que um arquivo está identado incorretamente, primeiro corrija a intação, então faça o commit, e depois a correção desejada. 
 
 Nunca faça os dois juntamente.
+
+Caso use o *VI* para editar seu código leia o seguinte artigo para configurar as tabulações: https://vim.fandom.com/wiki/Converting_tabs_to_spaces
