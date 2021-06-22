@@ -13,7 +13,7 @@ name: "CodeQL"
 
 on:
   push:
-    branches: [ main, beta_x.0 ]
+    branches: [ beta_x.0 ]
     paths-ignore:
       - docs/
       - examples/
@@ -26,7 +26,7 @@ on:
       
   pull_request:
     # The branches below must be a subset of the branches above
-    branches: [ main, beta_x.0 ]
+    branches: [ beta_x.0 ]
     paths-ignore:
       - docs/
       - examples/
