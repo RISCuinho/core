@@ -1,8 +1,8 @@
-name: Mark stale issues and pull requests
+name: Identifica Issues e Pull Request obsoletos
 
 on:
   schedule:
-  - cron: '42 23 * * *'
+  - cron: '00 14 * * 2'
 
 jobs:
   stale:
@@ -16,7 +16,7 @@ jobs:
     - uses: actions/stale@v3
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
-        stale-issue-message: 'Stale issue message'
-        stale-pr-message: 'Stale pull request message'
+        stale-issue-message: 'Issue que precisa ser priorizado!'
+        stale-pr-message: 'Pull Request que precisa ser priorizado!'
         stale-issue-label: 'no-issue-activity'
         stale-pr-label: 'no-pr-activity'
