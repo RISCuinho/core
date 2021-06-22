@@ -3,7 +3,7 @@ name: Example CI
 # Controls when the action will run. 
 on:
   push:
-    branches: [ beta_x.0 ]
+    branches: [ beta_0.x ]
     paths-ignore:
       - docs/
       - examples/
@@ -15,7 +15,7 @@ on:
       - SECURITY.md
       
   pull_request:
-    branches: [ beta_x.0 ]
+    branches: [ beta_0.x ]
     paths-ignore:
       - docs/
       - examples/
