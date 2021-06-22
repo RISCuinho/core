@@ -5,11 +5,14 @@ on:
   push:
     branches: [ beta_x.0 ]
     paths-ignore:
+      - docs/
+      - examples/
       - .gitignore
       - README.md
       - LICENSE
-      - examples/
-      - docs/
+      - CONTRIBUTING.md
+      - CODE_OF_CONDUCT.md
+      - SECURITY.md
       
   pull_request:
     branches: [ beta_x.0 ]
@@ -39,4 +42,4 @@ jobs:
         run: sudo apt install iverilog gtkwave yosys binutils 
 
       - name: Make Tests
-        run: make tests
+        run: make
