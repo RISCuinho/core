@@ -13,10 +13,30 @@ name: "CodeQL"
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, beta_x.0 ]
+    paths-ignore:
+      - docs/
+      - examples/
+      - .gitignore
+      - README.md
+      - LICENSE
+      - CONTRIBUTING.md
+      - CODE_OF_CONDUCT.md
+      - SECURITY.md
+      
   pull_request:
     # The branches below must be a subset of the branches above
-    branches: [ main ]
+    branches: [ main, beta_x.0 ]
+    paths-ignore:
+      - docs/
+      - examples/
+      - .gitignore
+      - README.md
+      - LICENSE
+      - CONTRIBUTING.md
+      - CODE_OF_CONDUCT.md
+      - SECURITY.md
+      
   schedule:
     - cron: '20 16 * * 3'
 
