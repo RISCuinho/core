@@ -97,19 +97,18 @@ DEPS = RegisterBank.v ProgramMemory.v \
 			DataBusControl.v DataMemory.v \
 			InstructionDecoder.v \
 			IntegerBasicALU.v \
-			ControlSistemOperation.v \
 			IVerilogInstructionTable.v
 
-TOP_MODULE_NAME = RISCuin_tb
+TOP_MODULE_NAME = $(NAME)_tb
+
 HDL_VER = 2001
 
-FPGA_LIB_PATHS = ../FPGA-MyLIB/
+FPGA_LIB_PATHS = ./lib/LibFPGA/, ./src
 FPGA_LIB_PARAMS=$(foreach d, $(FPGA_LIB_PATHS), -I$d)
 FPGA_LIB_GIT_TAG = step-by-step
-FPGA_LIB_GIT_BRANCH = master
+FPGA_LIB_GIT_BRANCH = main
 
-LIBS = AutoReset.v
-LIBS_FULL = ${FPGA_LIB_PATHS}AutoReset.v
+LIBS = ./lib/LibFPGA/AutoReset.v
 
 QUARTUS_PATH = /mnt/c/altera/13.1_Web\ Edition/quartus/bin/
 QUARTUS_EXT = .exe
