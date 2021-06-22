@@ -39,4 +39,4 @@ jobs:
         run: sudo apt install iverilog gtkwave yosys binutils 
 
       - name: Make Tests
-        run: make tests
+        run: make 
