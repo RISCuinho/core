@@ -1,0 +1,22 @@
+name: Identifica Issues e Pull Request obsoletos
+
+on:
+  schedule:
+  - cron: '00 14 * * 2'
+
+jobs:
+  stale:
+
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+
+    steps:
+    - uses: actions/stale@v3
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        stale-issue-message: 'Issue que precisa ser priorizado!'
+        stale-pr-message: 'Pull Request que precisa ser priorizado!'
+        stale-issue-label: 'no-issue-activity'
+        stale-pr-label: 'no-pr-activity'
