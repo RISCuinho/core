@@ -15,6 +15,7 @@ vsim.wlf
 vish_stacktrace.vstf
 tcl_stacktrace.txt
 
+*.swp
 *.bck
 *.bak
 *.vcd
