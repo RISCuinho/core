@@ -7,11 +7,11 @@ module DataBusControl (
    output reg busy,
 
    input      [1:0]            size_in, size_out,
-	
+   
    input      [31:0]           addr_in, addr_out,
-	
-   input      [31:0]				 data_in, 
-   output     [31:0] 			 data_out
+   
+   input      [31:0]           data_in, 
+   output     [31:0]           data_out
 );
 
 
@@ -29,33 +29,33 @@ wire ram_addr_in  = (addr_in  >= `DBC_RAM_START       && addr_in  <= `DBC_RAM_EN
                     (addr_in  >= `DBC_RAM_GLASS_START && addr_in  <= `DBC_RAM_GLASS_END);
 
 wire [`DBC_RAM_ADDR_WIDTH-1:0] local_ram_addr_out = ram_addr_out ? 
-                                                   addr_out[`DBC_RAM_ADDR_WIDTH-1:0]: 
-                                                      {`DBC_RAM_ADDR_WIDTH{1'bz}}; 
+                                                    addr_out[`DBC_RAM_ADDR_WIDTH-1:0]: 
+                                                    {`DBC_RAM_ADDR_WIDTH{1'bz}}; 
 wire [`DBC_RAM_ADDR_WIDTH-1:0] local_ram_addr_in  = ram_addr_out ?
-                                                   addr_in[`DBC_RAM_ADDR_WIDTH-1:0] :
-                                                      {`DBC_RAM_ADDR_WIDTH{1'bz}};
+                                                    addr_in[`DBC_RAM_ADDR_WIDTH-1:0] :
+                                                    {`DBC_RAM_ADDR_WIDTH{1'bz}};
  
-wire dbc_register_addrs = addr_out >= `DBC_REGISTER_START && addr_out <= `DBC_REGISTER_END;
+wire dbc_register_addrs = (addr_out >= `DBC_REGISTER_START) && (addr_out <= `DBC_REGISTER_END);
 
 assign local_data_out = (!rst && ready && !busy && ram_addr_out && rd)  ?
-                       size_out == 2'b00 ? {24'b0, memory[local_ram_addr_out][ 7:0]} :
-                       size_out == 2'b01 ? {16'b0, memory[local_ram_addr_out][15:0]} :
-                       size_out == 2'b10 ? memory[local_ram_addr_out] : 32'b0 : 
-                       32'b0;
+                        size_out == 2'b00 ? {24'b0, memory[local_ram_addr_out][ 7:0]} :
+                        size_out == 2'b01 ? {16'b0, memory[local_ram_addr_out][15:0]} :
+                        size_out == 2'b10 ? memory[local_ram_addr_out] : 32'b0 : 
+                        32'b0;
 
 assign data_out = dbc_register_addrs                                    ? // endereços dos registradores dbc
-						
+                  
                   (addr_out == `DBC_REGISTER_MISALIGNED_EXCEPTION_ADDR || // registrador desalinhamento
-						 addr_out == `DBC_REGISTER_EMPTY_ADDR_EXCPETION_ADDR) ?  // registrador endereço vazio/invalido
+                   addr_out == `DBC_REGISTER_EMPTY_ADDR_EXCPETION_ADDR) ?  // registrador endereço vazio/invalido
                    dbc_register[31:0]                                   : 
-						
+                  
                    32'b1                                   :  // default para registradores dbc 
 
-						local_data_out                                       ;  // outro dado endereçado
+                  local_data_out                                       ;  // outro dado endereçado
 
 always @(posedge clk ) begin
    dbc_register[`DBC_REGISTER_EMPTY_ADDR_EXCEPTION_START_BIT] <=
-                                 !ram_addr_out && !ram_addr_in  &&
+                                 !ram_addr_out & !ram_addr_in  &
                                  !dbc_register_addrs ; 
    // Lança uma exception se o endereço de memória estiver desalinhado
    // half-word cuida apenas do primeiro bit menos significativo 
@@ -75,26 +75,26 @@ end
 // pode se usar BRAM mas melhor que use a DRAM que acompanha a placa
 // se HUB75 também, já a TANG Nano preciso verificar.
 initial begin
-   local_rst <= 1'bx;
-   busy <= 1'bx;
+   local_rst  <= 1'bx;
+   busy       <= 1'bx;
    local_busy <= 1'bx;
-   ready <= 1'b1;
+   ready      <= 1'b1;
 end
 
 always @(*) begin
 // busy não é usado exernamente ainda.
 //     busy <= local_busy;
-      busy <=1'b0;
-     dbc_register[`DBC_REGISTER_BUS_BUSY_START_BIT] <= local_busy;
+   busy <= 1'b0;
+   dbc_register[`DBC_REGISTER_BUS_BUSY_START_BIT] <= local_busy;
 end
 
 always @(posedge clk) begin
 
-  if(rd) begin
+   if(rd) begin
       $display("Memoria out 0h%08h => 0h%08h", addr_out, memory[local_ram_addr_out]);
       $display("Registradores: %b",dbc_register_addrs);
    end
-  if(!rst && local_busy === 1'bx )begin
+   if(!rst && local_busy === 1'bx )begin
       ready <= 1'b1;
       local_busy <= 1'b1;
    end
