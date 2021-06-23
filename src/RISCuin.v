@@ -35,6 +35,7 @@ wire [31:0] data_in, data_out, data_eei;
 wire [31:0] imm;
 
 wire [15:0] op_code;
+wire [ 5:0] alu_op;
 
 wire imm_rs2_sel;
 
@@ -118,7 +119,8 @@ ProgramMemory #(.INSTR_ADDR_WIDTH(`INSTR_ADDR_WIDTH))
 /* ########
    Decodificador de instruções RV32I básico.
  */
-InstructionDecoderRV32I id_rv32i(.instr(instr), .op_code(op_code), 
+InstructionDecoderRV32I id_rv32i(.instr(instr), 
+                        .op_code(op_code), .alu_op(alu_op),
                         .alu_sel(alu_sel), .branch(branch), .load_pc(load_pc),
                         .rs1_sel(rs1_sel), .rs2_sel(rs2_sel), .rd_sel(rd_sel), 
                         .rd_data_sel(rd_data_sel),
@@ -141,7 +143,7 @@ RegisterBank rb(.clk(clk), .rst(rst), .ready(rb_ready),
  */
 IntegerBasicALU #(.DATA_WIDTH(`INTERNAL_DATA_WIDTH)) ib_alu(
    .E(alu_sel && !local_rst),
-   .alu_op(op_code),
+   .alu_op(alu_op),
    .A(alu_A), .B(alu_B),
    .out(alu_out)
 );
