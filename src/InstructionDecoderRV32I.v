@@ -1,10 +1,13 @@
+`include "IntegerBasicALU_OpCodes.vh"
+
 module InstructionDecoderRV32I (
    input  [31:0] instr,
-   output [15:0] op_code,
 
    output        branch, load_pc,
 
+   output [15:0] op_code,
    output        alu_sel,
+   output [ 5:0] alu_op,
 
    output [ 1:0] rd_data_sel, 
 
@@ -102,14 +105,62 @@ assign imm          = SLLI || SRLI || SRAI ? {    27'b0      ,  shamt} :
                       TYPE_U               ? {    imm_U      ,  {12'b0}      }  : 
                       32'bx;
 
-assign op_code = SLLI || SRLI || SRAI || 
-                      TYPE_R               ? {FN7 ,  FN3, code}  :
-                      TYPE_S ||
-                      TYPE_I || TYPE_IL ||
-                      TYPE_B               ? {7'b0,  FN3, code} :
-                      TYPE_J ||
-                      TYPE_U               ? {7'b0, 3'b0, code} :
-                      16'bx;
+assign op_code  = SLLI || SRLI || SRAI || 
+                  TYPE_R               ? {FN7 ,  FN3, code}  :
+                  TYPE_S ||
+                  TYPE_I || TYPE_IL ||
+                  TYPE_B               ? {7'b0,  FN3, code} :
+                  TYPE_J ||
+                  TYPE_U               ? {7'b0, 3'b0, code} :
+                  16'b0;
+
+assign alu_op = JAL    ||
+                BEQ    ||
+                BNE    ||
+                BLT    ||
+                BGE    ||
+                BLTU   ||
+                BGEU   ||
+                AUIPC ||
+                ADD   ||
+                ADDI  ||
+                LB    ||
+                LBU   ||
+                LH    ||
+                LHU   ||
+                LW    ||
+                SB    ||
+                SH    ||
+                SW     ? `ALU_OP_PLUS            :
+                
+                SUB    ? `ALU_OP_SUB             :
+                
+                SLLI  ||
+                SLL    ? `ALU_OP_SHIFT_LEFT      :
+                
+                SRLI  ||
+                SRL    ? `ALU_OP_SHIFT_RIGHT     :
+                
+                SRAI  ||
+                SRA    ? `ALU_OP_SHIFT_RIGHT_A   :
+             
+                SLTIU  ? `ALU_OP_SET_LESS_THAN_U :
+             
+                SLTI  ||
+                SLT    ? `ALU_OP_SET_LESS_THAN   :
+
+                AND   ||
+                ANDI   ? `ALU_OP_AND             :
+
+                OR    ||
+                ORI    ? `ALU_OP_OR               :
+
+                XOR   ||
+                XORI   ? `ALU_OP_XOR              :
+
+                5'b00000;       
+             
+ 
 
 assign rd_sel       = TYPE_I || TYPE_IL ||
                       TYPE_U || TYPE_J || TYPE_R                     ? instr[11:7] : 

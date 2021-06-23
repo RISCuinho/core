@@ -95,7 +95,7 @@ NAME = RISCuin
 DEPS = RegisterBank.v ProgramMemory.v \
 			ProgramCountControlUnit.v \
 			DataBusControl.v DataMemory.v \
-			InstructionDecoder.v \
+			InstructionDecoderRV32I.v \
 			IntegerBasicALU.v \
 			IVerilogInstructionTable.v
 
