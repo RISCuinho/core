@@ -1,10 +1,13 @@
-module InstructionDecoderRV32I(
+`include "IntegerBasicALU_OpCodes.vh"
+
+module InstructionDecoderRV32I (
    input  [31:0] instr,
-   output [ 4:0] alu_opcode,
 
    output        branch, load_pc,
 
+   output [15:0] op_code,
    output        alu_sel,
+   output [ 5:0] alu_op,
 
    output [ 1:0] rd_data_sel, 
 
@@ -20,7 +23,7 @@ module InstructionDecoderRV32I(
 );
 
 initial begin
-//   $display("Instruction Decoder");
+   $display("Instruction Decoder");
 end
 
 //0000000 00000 00001 100 00011 0000011
@@ -96,26 +99,78 @@ wire [ 4:0] shamt   = instr[24:20];
 
 assign imm          = SLLI || SRLI || SRAI ? {    27'b0      ,  shamt} :
                       TYPE_I               ? {{20{imm_I[11]}},  imm_I        }  : 
-                      TYPE_B               ? {{18{imm_B[12]}},  imm_B, {1'b0}}  : 
+                      TYPE_B               ? {{19{imm_B[12]}},  imm_B, {1'b0}}  : 
                       TYPE_S               ? {{19{imm_S[11]}},  imm_S        }  : 
-                      TYPE_J               ? {{10{imm_J[20]}},  imm_J, {1'b0}}  : 
+                      TYPE_J               ? {{11{imm_J[20]}},  imm_J, {1'b0}}  : 
                       TYPE_U               ? {    imm_U      ,  {12'b0}      }  : 
-                      32'b0;
+                      32'bx;
 
-assign alu_opcode =   SLLI || SRLI || SRAI || 
-                      TYPE_R               ? {FN7[6:5] ,  FN3}  :
-                      TYPE_B               ? {2'b10    ,  FN3}  :
-                      5'b0;
+assign op_code  = SLLI || SRLI || SRAI || 
+                  TYPE_R               ? {FN7 ,  FN3, code}  :
+                  TYPE_S ||
+                  TYPE_I || TYPE_IL ||
+                  TYPE_B               ? {7'b0,  FN3, code} :
+                  TYPE_J ||
+                  TYPE_U               ? {7'b0, 3'b0, code} :
+                  16'b0;
+
+assign alu_op = JAL    ||
+                BEQ    ||
+                BNE    ||
+                BLT    ||
+                BGE    ||
+                BLTU   ||
+                BGEU   ||
+                AUIPC ||
+                ADD   ||
+                ADDI  ||
+                LB    ||
+                LBU   ||
+                LH    ||
+                LHU   ||
+                LW    ||
+                SB    ||
+                SH    ||
+                SW     ? `ALU_OP_PLUS            :
+                
+                SUB    ? `ALU_OP_SUB             :
+                
+                SLLI  ||
+                SLL    ? `ALU_OP_SHIFT_LEFT      :
+                
+                SRLI  ||
+                SRL    ? `ALU_OP_SHIFT_RIGHT     :
+                
+                SRAI  ||
+                SRA    ? `ALU_OP_SHIFT_RIGHT_A   :
+             
+                SLTIU  ? `ALU_OP_SET_LESS_THAN_U :
+             
+                SLTI  ||
+                SLT    ? `ALU_OP_SET_LESS_THAN   :
+
+                AND   ||
+                ANDI   ? `ALU_OP_AND             :
+
+                OR    ||
+                ORI    ? `ALU_OP_OR               :
+
+                XOR   ||
+                XORI   ? `ALU_OP_XOR              :
+
+                5'b00000;       
+             
+ 
 
 assign rd_sel       = TYPE_I || TYPE_IL ||
                       TYPE_U || TYPE_J || TYPE_R                     ? instr[11:7] : 
-                      5'b0;
+                      5'bx;
 
 assign rs1_sel      = TYPE_I                    ||
                       TYPE_B || TYPE_S || TYPE_R                     ? instr[19:15] : 
-                      5'b0;
+                      5'bx;
 assign rs2_sel      = TYPE_B || TYPE_S || TYPE_R                     ? instr[24:20] : 
-                      5'b0;
+                      5'bx;
 
 assign imm_rs2_sel  = TYPE_J || TYPE_I || TYPE_S || TYPE_B || TYPE_U;
 
