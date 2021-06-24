@@ -3,22 +3,28 @@
 module IntegerBasicALU #(
    parameter DATA_WIDTH = 32
 )(
-   input         E,
-   input         [ 5:0] alu_op,
+   input                          E,
+   input         [ 5:0]           alu_op,
    input  signed [DATA_WIDTH-1:0] A, B,
-   output signed [DATA_WIDTH-1:0] out
+   output signed [DATA_WIDTH-1:0] out,
+   output                         carriage 
 );
 
-assign out = !E                               ? {DATA_WIDTH{1'b0}}        :
-             alu_op == `ALU_OP_PLUS            ? $signed(A) + $signed(B)   :
+wire [DATA_WIDTH-1:0] left,right,arith; 
 
-             alu_op == `ALU_OP_SUB             ? $signed(A) - $signed(B)   :  
+assign {carrige,left}  = alu_op == `ALU_OP_SHIFT_LEFT    ? $signed(A)         << $signed(B) : {DATA_WIDTH + 1{1'b0}};        
+assign {right,carrige} = alu_op == `ALU_OP_SHIFT_RIGHT   ? $signed(A)         >> $signed(B) : 
+                         alu_op == `ALU_OP_SHIFT_RIGHT_A ? $signed($signed(A) >>> B) :        {DATA_WIDTH + 1{1'b0}};        
 
-             alu_op == `ALU_OP_SHIFT_LEFT      ? $signed(A) << $signed(B)  :  
+assign {carrige,arith} = alu_op == `ALU_OP_PLUS          ? $signed(A) + $signed(B)   :
+                         alu_op == `ALU_OP_SUB           ? $signed(A) - $signed(B)   :        {DATA_WIDTH + 1{1'b0}};        
 
-             alu_op == `ALU_OP_SHIFT_RIGHT     ? $signed(A) >> $signed(B)  :  
+assign out = !E                                 ? {DATA_WIDTH{1'b0}}        :
+               
+             alu_op == `ALU_OP_PLUS || `ALU_OP_SUB ? arith :  
 
-             alu_op == `ALU_OP_SHIFT_RIGHT_A   ? $signed($signed(A) >>> B) :
+             alu_op == `ALU_OP_SHIFT_LEFT       ? left   :  
+             alu_op == `ALU_OP_SHIFT_RIGHT || `ALU_OP_SHIFT_RIGHT_A    ? right  :
 
              alu_op == `ALU_OP_SET_LESS_THAN_U ?  A < B                    :
 
