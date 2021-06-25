@@ -103,7 +103,7 @@ assign imm          = SLLI || SRLI || SRAI ? {    27'b0      ,  shamt} :
                       TYPE_S               ? {{19{imm_S[11]}},  imm_S        }  : 
                       TYPE_J               ? {{11{imm_J[20]}},  imm_J, {1'b0}}  : 
                       TYPE_U               ? {    imm_U      ,  {12'b0}      }  : 
-                      32'bx;
+                      32'b0;
 
 assign op_code  = SLLI || SRLI || SRAI || 
                   TYPE_R               ? {FN7 ,  FN3, code}  :
@@ -158,19 +158,19 @@ assign alu_op = JAL    ||
                 XOR   ||
                 XORI   ? `ALU_OP_XOR              :
 
-                5'b00000;       
+                 5'b00000;       
              
  
 
 assign rd_sel       = TYPE_I || TYPE_IL ||
                       TYPE_U || TYPE_J || TYPE_R                     ? instr[11:7] : 
-                      5'bx;
+                      5'b0;
 
 assign rs1_sel      = TYPE_I                    ||
                       TYPE_B || TYPE_S || TYPE_R                     ? instr[19:15] : 
-                      5'bx;
+                      5'b0;
 assign rs2_sel      = TYPE_B || TYPE_S || TYPE_R                     ? instr[24:20] : 
-                      5'bx;
+                      5'b0;
 
 assign imm_rs2_sel  = TYPE_J || TYPE_I || TYPE_S || TYPE_B || TYPE_U;
 
