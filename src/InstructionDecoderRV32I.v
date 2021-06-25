@@ -114,49 +114,49 @@ assign op_code  = SLLI || SRLI || SRAI ||
                   TYPE_U               ? {7'b0, 3'b0, code} :
                   16'b0;
 
-assign alu_op = op_code == JAL    ||
-                op_code == BEQ    ||
-                op_code == BNE    ||
-                op_code == BLT    ||
-                op_code == BGE    ||
-                op_code == BLTU   ||
-                op_code == BGEU   ||
-                op_code == AUIPC ||
-                op_code == ADD   ||
-                op_code == ADDI  ||
-                op_code == LB    ||
-                op_code == LBU   ||
-                op_code == LH    ||
-                op_code == LHU   ||
-                op_code == LW    ||
-                op_code == SB    ||
-                op_code == SH    ||
-                op_code == SW     ? `ALU_OP_PLUS            :
+assign alu_op = JAL    ||
+                BEQ    ||
+                BNE    ||
+                BLT    ||
+                BGE    ||
+                BLTU   ||
+                BGEU   ||
+                AUIPC ||
+                ADD   ||
+                ADDI  ||
+                LB    ||
+                LBU   ||
+                LH    ||
+                LHU   ||
+                LW    ||
+                SB    ||
+                SH    ||
+                SW     ? `ALU_OP_PLUS            :
                 
-                op_code == SUB    ? `ALU_OP_SUB             :
+                SUB    ? `ALU_OP_SUB             :
                 
-                op_code == SLLI  ||
-                op_code == SLL    ? `ALU_OP_SHIFT_LEFT      :
+                SLLI  ||
+                SLL    ? `ALU_OP_SHIFT_LEFT      :
                 
-                op_code == SRLI  ||
-                op_code == SRL    ? `ALU_OP_SHIFT_RIGHT     :
+                SRLI  ||
+                SRL    ? `ALU_OP_SHIFT_RIGHT     :
                 
-                op_code == SRAI  ||
-                op_code == SRA    ? `ALU_OP_SHIFT_RIGHT_A   :
+                SRAI  ||
+                SRA    ? `ALU_OP_SHIFT_RIGHT_A   :
              
-                op_code == SLTIU  ? `ALU_OP_SET_LESS_THAN_U :
+                SLTIU  ? `ALU_OP_SET_LESS_THAN_U :
              
-                op_code == SLTI  ||
-                op_code == SLT    ? `ALU_OP_SET_LESS_THAN   :
+                SLTI  ||
+                SLT    ? `ALU_OP_SET_LESS_THAN   :
 
-                op_code == AND   ||
-                op_code == ANDI   ? `ALU_OP_AND             :
+                AND   ||
+                ANDI   ? `ALU_OP_AND             :
 
-                op_code == OR    ||
-                op_code == ORI    ? `ALU_OP_OR               :
+                OR    ||
+                ORI    ? `ALU_OP_OR               :
 
-                op_code == XOR   ||
-                op_code == XORI   ? `ALU_OP_XOR              :
+                XOR   ||
+                XORI   ? `ALU_OP_XOR              :
 
                  5'b00000;       
              
