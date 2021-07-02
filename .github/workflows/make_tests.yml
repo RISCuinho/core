@@ -3,7 +3,7 @@ name: Example CI
 # Controls when the action will run. 
 on:
   push:
-    branches: [ beta_0.x ]
+    branches: [ beta_0.x, beta_0.x_dump ]
     paths-ignore:
       - .gitignore
       - README.md
@@ -12,7 +12,7 @@ on:
       - docs/
       
   pull_request:
-    branches: [ beta_0.x ]
+    branches: [ beta_0.x, beta_0.x_dump ]
     paths-ignore:
       - .gitignore
       - README.md
