@@ -12,6 +12,9 @@ module DataBusControl (
    
    input      [31:0]           data_in, 
    output     [31:0]           data_out
+`ifdef RISCUIN_DUMP
+   ,input dump
+`endif
 );
 
 
@@ -121,4 +124,29 @@ always @(posedge clk) begin
    end
 
 end
+
+`ifdef RISCUIN_DUMP
+   integer i;
+   integer fileDesc;
+   always @(posedge clk) begin
+      if(dump) begin
+         $display("DataBusControl: Arquivo Dump: %s, %10t", `RISCUIN_DUMP_FILE_DBC, $realtime);
+         fileDesc = $fopen({"./dumps/",`RISCUIN_DUMP_FILE_DBC},"a");
+         $fwrite(fileDesc,"Dump Data Bus Control inicializado em:  %10t\n",$realtime);
+         $fwrite(fileDesc,"rst: %0b, wd: %0b, rd: %0b, ready: %0b, busy: %0b \n",rst, wd, rd, ready, busy);
+         $fwrite(fileDesc,"Addr in: %8h, Size: %4h, Data: %8h\n",addr_in,size_in,data_in);
+         $fwrite(fileDesc,"Addr out: %8h, Size: %4h, Data: %8h\n",addr_out,size_out,data_out);
+         $fwrite(fileDesc,"========================================================= \n");
+         $fwrite(fileDesc,"           0x00       0x01     0x02     0x03     0x04     0x05     0x06     0x07  \n");
+         for (i=0; i<`DBC_RAM_SIZE; i=i+8) begin:dump_memory
+            $fwrite(fileDesc,"0x%8h - %8h %8h %8h %8h %8h %8h %8h %8h \n", i,
+              memory[i+0], memory[i+1], memory[i+2], memory[i+3], 
+              memory[i+4], memory[i+5], memory[i+6], memory[i+7]);
+         end 
+         $fwrite(fileDesc,"Dump finalizado em:  %10t\n",$realtime);
+         $fwrite(fileDesc,"#########################################################\n");
+         $fclose(fileDesc);
+      end
+    end
+`endif
 endmodule
