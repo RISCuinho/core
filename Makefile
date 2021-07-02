@@ -143,10 +143,12 @@ FPGA_PACK = tq144
 
 #------------- Simulation of project 1 ---------
 sim: $(NAME).vcd
-	@echo $< $(<:.vcd=.gtkw)
+	mkdir -p ./dumps
+	rm -f ./dumps/*
 	vvp -lxt2 $(<:.vcd=.out)
 
 gtkwave: $(NAME).vcd  
+	@echo $< $(<:.vcd=.gtkw)
 	gtkwave $< $(<:.vcd=.gtkw) &
 
 quartus: 
@@ -214,7 +216,7 @@ time: $(NAME).rpt
 
 #-- Clean the project
 clean:
-	rm -f *.bak *.bin *.asc *.blif *.out *.vcd examples/*~ *.rpt
+	rm -f *.bak *.bin *.asc *.blif *.out *.vcd dumps/* examples/*~ *.rpt
 
 .PHONY: all clean time
 

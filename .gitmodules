@@ -6,4 +6,4 @@
 	url = https://github.com/RISCuinho/LibFPGA
 [submodule "memory"]
 	path = memory
-	url = https://github.com/RISCuinho/memoria
+	url = https://github.com/RISCuinho/memoria/
