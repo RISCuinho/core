@@ -1,14 +1,14 @@
 **RISC**uinho
 =====================================
-## A scratch in the possibilities in the universe of microcontrollers
+## A _**scratch**_ in the possibilities in the universe of microcontrollers
 
 ![RISCuinho](./docs/images/logos/RISCuinho-Logo.png)
 
-**RISC**uinho (Risquinho), in portuguese is a small scratch on the surface of something, and this represents the proposal of this project that starts in a very didactic way, doing the minimum necessary by scratching the surface of what can be done with a Core or multiple RISC Cores.
+**RISC**uinho (Risquinho), in portuguese is a **small scratch** on the surface of something, and this represents the proposal of this project that starts in a very didactic way, doing the minimum necessary by scratching the surface of what can be done with a Core or multiple RISC Cores.
 
-This project is educational and aims at my study on microprocessors and to teach my introductory courses on microprocessor programming and architecture at [Arduino Minas (Curso Maker/Geringonça Maker Space)](https://facebook.com/CursoMaker). RISCuinho (Risquinho) will also be used for my RTOS studies when it is possible to multiply its core to simulate multicore microcontrollers.
+This project is educational and aims at my study on microprocessors and to teach my introductory courses about microcontroller programming and architecture at [Arduino Minas (Curso Maker/Geringonça Maker Space)](https://facebook.com/CursoMaker). RISCuinho (Risquinho) will also be used for my RTOS studies when it is possible to multiply its core to simulate multicore microcontrollers.
 
-I am a autodidata student I do not have a computer science course and no course that gives me the basis to create such a microcontroller, however I am graduated in Computer Network Design and Implementation, I have some programming courses, Project Management and other related areas, I used to create it was through studies of specialized books such as those discussed in the bibliography section and on websites on the internet.
+I am a autodidata student, I do not have a computer science course and no course that gives me the basis to create such a microcontroller, however I am graduated in "Computer Network Design and Implementation", I have some programming courses, Project Management and other related areas, I used to create it was through studies of specialized books such as those discussed in the bibliography section and on websites on the internet.
 
 All this material was assimilated with the help of conversations in the [RISC-V Brasil group on Telegram](https://t.me/riscvbr), where participants from different areas related to IT and exchange experience on microprocessors and microcontrollers, some renowned professionals in the sector, which I am very grateful in the sector, in particular:
 
@@ -27,19 +27,28 @@ Eu usarei o português como idioma oficial deste projeto, porém o inglês tamb�
 
 ## Repositório em uma nova Organização
 
-O Repositório do RISCuinho foi alterado para uma [nova Organização](https://github.com/RISCuinho), assim os repositórios relativos a projetos de Hardware com FPGA e do RISCuinho especificamente ficarão melhor organizado. o DuinOS ficará especificamente com projetos RTOS em especial para Arduino e similares, isso inclui o RISCuinho. O repositório principal do projeto agora tem novo nome, agora chamado ["core"](https://github.com/RISCuinho/core), e serão criados repositórios complementáres. Bibliotecas como FPGA-MyLib serão revistas e póderão ter seu nome alterado.
+O Repositório do RISCuinho foi alterado para uma [nova Organização](https://github.com/RISCuinho), assim os repositórios relativos a projetos ficarão melhor organizado. o DuinOS ficará especificamente com projetos RTOS em especial para Arduino e similares, isso inclui o RISCuinho. O repositório principal do projeto agora tem novo nome, agora chamado ["core"](https://github.com/RISCuinho/core), e serão criados repositórios complementáres. Bibliotecas como FPGA-MyLib serão revistas e póderão ter seu nome alterado.
+
+A Organziação ter os seguintes repositórios de maior relevancia:
+
+* **core** conterá o core do RISCuinho, o RTL principal para construção do microcontrolador, outros RTL e bibliotecas FPGA são adiconadas como submodulos quando necessário, como a FPGA-Lib
+* **FPGA-Lib** um conjunto de exemplos e módulos FPGA uteis a qualquer projeto, muito útil para aprendizado e de grande valia para o **core** do RISCuinho.
+* **workspace** agrega todos os repositórios relevantes como submódulos e permite que rápidamente se construa um ambiente de trabalho em qualquer outro computador.
+* **examples** pasta de exemplos de códigos documentados usados pra testar o RISCuinho e também pra estudo de assembly, quem quiser testar o RISCuinho deve começar propondo exemplos neste repositorio.
+
+### Exemplos
+
+A pasta [examples](./examples) possui exemplos para testes, na sua maioria obtidos no curso oferecido pela [Vicilogic](https://www.vicilogic.com/), tais exemplos podem ser obtidos no link [https://www.vicilogic.com/vicilearn/run_step/?s_id=1452](https://www.vicilogic.com/vicilearn/run_step/?s_id=1452)
+
+Caso você queira colaborar com o RISCuinho uma boa forma de começar é criando exemplos em Assembly RISC-V para teste, procure desafiar o core em sua proposta, em especial na especificação RISC-V RV32I, caso queira propor melhorias e precise de instruçes de outras especificaço, abra um issue para justificar e discutir isso.
 
 ## Arquitetura do Microcontrolador
 
-O **RISC**uinho (Risquinho) usa aa Arquitetura Havard simples, com a memória de programa espelhada no endereço de memória de dados, para que possa ser reprogramada a aquente e demonstrar recursos modernos de microcontroladores que possuem tal recurso, isso será discutido futuramente em documentação apropriada.
+O **RISC**uinho (Risquinho) usa aa Arquitetura Havard simples, com a memória de programa espelhada no endereço de memória de dados, para que possa ser reprogramada aquente (over the air - OTA).
 
-O **RISC**uinho possui 32 registradores conforme a especificação RV32I. Possui todas as intruções básicas para operação com numeros inteiros implementadas. Ele não possui instruções de Sistema, Sincronismo e Controle implementadas nesta versão.
+O **RISC**uinho possui 32 registradores conforme a especificação RV32I. Possui todas as intruções básicas para operação com números inteiros implementadas. Ele não possui instruções de Sistema, Sincronismo e Controle implementadas nesta versão.
 
 O **RISC**uinho também é um core de um 3 estágio de um único ciclo de clock, em versões futuras será desenvolvido um pipeline mais complexo.
-
-## Exemplos
-
-A pasta [examples](./examples) possui exemplos para testes, na sua maioria obtidos no curso oferecido pela [Vicilogic](https://www.vicilogic.com/), tais exemplos podem ser obtidos no link [https://www.vicilogic.com/vicilearn/run_step/?s_id=1452](https://www.vicilogic.com/vicilearn/run_step/?s_id=1452)
 
 ## Especificação RISC-V
 
