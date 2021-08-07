@@ -1,21 +1,16 @@
-# Security Policy
+# Politica de Segurança
 
-## Supported Versions
+## Versões Suportadas
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
+A versão em desenvolvimento no momento é a beta_0.x, poderão haver diversos branchs de ajuste nesta versão, portando é preciso se atentar a qual está mais atual.
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 5.1.x   | :white_check_mark: |
-| 5.0.x   | :x:                |
-| 4.0.x   | :white_check_mark: |
-| < 4.0   | :x:                |
+| beta_0.x | :white_check_mark: |
+| beta_0.x_dump | :x:                |
 
-## Reporting a Vulnerability
+## Relatório de falhas
 
-Use this section to tell people how to report a vulnerability.
+Não há nenhuma falha que possa vir a causar dano que seja conhecida, porém não é recomendado os testes em um FPGA físico, use apenas o simulador.
 
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+Não nos responsabilizamos por danos causados ao seu FPGA.

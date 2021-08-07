@@ -39,7 +39,9 @@ module RISCuin_tb;
       $dumpvars;
 
       #02000 $display("RISCuinho Testbentch: 2000 Ticks será finalziado!");
+      `ifndef __YOSYS__
       $finish;
+      `endif
     end
 
    wire  pc_end;
