@@ -1,0 +1,4 @@
+[submodule "LibFPGA"]
+	path = lib/LibFPGA
+	url = https://github.com/RISCuinho/LibFPGA.git
+	branch = main
