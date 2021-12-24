@@ -3,7 +3,19 @@
 
 module RISCuin(
    input clk, rst, 
-   output pc_end);
+   output internal_rst,
+   output pc_end
+`ifdef RISCUIN_DUMP
+   ,input dump
+   ,output [`INSTR_ADDR_WIDTH-1:0] pc
+`endif
+);
+
+`ifdef RISCUIN_DUMP
+initial begin 
+   $display("RISCuin: Dump está ativo, será criado dump de memória e registradores");
+end
+`endif
 
 localparam TYPE_B       = 7'b1100011;
 localparam TYPE_IJ      = 7'b1100111;
@@ -35,10 +47,14 @@ wire [31:0] data_in, data_out, data_eei;
 wire [31:0] imm;
 
 wire [15:0] op_code;
+wire [ 5:0] alu_op;
 
 wire imm_rs2_sel;
 
-wire [`INSTR_ADDR_WIDTH-1:0] pc, pc_plus, pc_next;
+`ifndef RISCUIN_DUMP
+wire [`INSTR_ADDR_WIDTH-1:0] pc;
+`endif
+wire [`INSTR_ADDR_WIDTH-1:0] pc_plus, pc_next;
 wire [`INSTR_ADDR_WIDTH-1:0] pc_branch =  alu_out[`INSTR_ADDR_WIDTH-1:2];
 wire [`INSTR_ADDR_WIDTH+1:0] pc_ext = {pc,2'b00};
 wire pc_enable = !rst && bus_ready && rb_ready && !pc_end && !bus_busy;
@@ -118,7 +134,8 @@ ProgramMemory #(.INSTR_ADDR_WIDTH(`INSTR_ADDR_WIDTH))
 /* ########
    Decodificador de instruções RV32I básico.
  */
-IntegerBasicInstructionDecoder ib_id(.instr(instr), .op_code(op_code), 
+InstructionDecoderRV32I id_rv32i(.instr(instr), 
+                        .op_code(op_code), .alu_op(alu_op),
                         .alu_sel(alu_sel), .branch(branch), .load_pc(load_pc),
                         .rs1_sel(rs1_sel), .rs2_sel(rs2_sel), .rd_sel(rd_sel), 
                         .rd_data_sel(rd_data_sel),
@@ -132,8 +149,13 @@ IntegerBasicInstructionDecoder ib_id(.instr(instr), .op_code(op_code),
    Banco de Registradores
  */                     
 RegisterBank rb(.clk(clk), .rst(rst), .ready(rb_ready), 
-                  .rs1_sel(rs1_sel), .rs2_sel(rs2_sel), .rd_sel(rd_sel), .reg_w(reg_w),
-                  .rs1_data(rs1_data), .rs2_data(rs2_data), .rd_data(rd_data));
+                .reg_w(reg_w),
+                .rs1_sel(rs1_sel), .rs2_sel(rs2_sel), .rd_sel(rd_sel),
+                .rs1_data(rs1_data), .rs2_data(rs2_data), .rd_data(rd_data)
+`ifdef RISCUIN_DUMP
+                ,.dump(dump)
+`endif
+);
 
 
 /* ###########
@@ -141,7 +163,7 @@ RegisterBank rb(.clk(clk), .rst(rst), .ready(rb_ready),
  */
 IntegerBasicALU #(.DATA_WIDTH(`INTERNAL_DATA_WIDTH)) ib_alu(
    .E(alu_sel && !local_rst),
-   .alu_op(op_code),
+   .alu_op(alu_op),
    .A(alu_A), .B(alu_B),
    .out(alu_out)
 );
@@ -162,7 +184,11 @@ DataBusControl data_m_ctl(
                         .wd(bus_w), .rd(bus_r),
                         .size_in(bus_size), .size_out(bus_size),
                         .addr_in(bus_w?alu_out:{32'bz}), .addr_out(bus_r?alu_out:{32'bz}),
-                        .data_in(data_in), .data_out(data_out));
+                        .data_in(data_in), .data_out(data_out)
+`ifdef RISCUIN_DUMP 
+                        , .dump(dump)
+`endif
+);
 
 
 /* ########
@@ -170,9 +196,9 @@ DataBusControl data_m_ctl(
    CONTROL
    SYSTEM
  */
-`ifdef RISCUIN_ControlSistemOperation
+`ifdef RISCUIN_ControlSystemOperation
 wire cso_e = 1'b1;
-ControlSistemOperation cso(
+InstructionDecoderCSO cso(
    E(cso_e),
    instr(instr),
    .rd_sel(rd_sel), .rs1_sel(.rs1_sel),

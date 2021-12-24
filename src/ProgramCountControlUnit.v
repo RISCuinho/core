@@ -20,8 +20,8 @@ assign pc_end  = pc == {INSTR_ADDR_WIDTH{1'b1}};
 
 always @(posedge clk or posedge rst) begin
    if(rst)
-		pc      <= {INSTR_ADDR_WIDTH{1'b0}};
-	else if(E)
+      pc      <= {INSTR_ADDR_WIDTH{1'b0}};
+   else if(E)
       pc <= pc_next;
 end
 

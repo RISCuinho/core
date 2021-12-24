@@ -1,3 +1,5 @@
+`include "config.vh"
+
 module ProgramMemory #(
    parameter INSTR_ADDR_WIDTH   = 20,
    parameter STEP    = 4
@@ -24,13 +26,13 @@ module ProgramMemory #(
                                                                            STEP, (STEP*8), INSTR_ADDR_WIDTH, SIZE);
       $display("Load prog_%0d.hex",SIZE);
       if(INSTR_ADDR_WIDTH == 5 )
-         $readmemh("../memory/prog_32.hex", memory); // carrega um programa de referência   
+         $readmemh(`MEMORY_PROG_32, memory); // carrega um programa de referência   
       else if(INSTR_ADDR_WIDTH == 6 )
-         $readmemh("../memory/prog_64.hex", memory); // carrega um programa de referência   
+         $readmemh(`MEMORY_PROG_64, memory); // carrega um programa de referência   
       else if(INSTR_ADDR_WIDTH == 7 )
-         $readmemh("../memory/prog_128.hex", memory); // carrega um programa de referência   
+         $readmemh(`MEMORY_PROG_128, memory); // carrega um programa de referência   
       else if(INSTR_ADDR_WIDTH == 8 )
-         $readmemh("../memory/prog_254.hex", memory); // carrega um programa de referência   
+         $readmemh(`MEMORY_PROG_256, memory); // carrega um programa de referência   
    end
 
    assign instr = memory[pc];  

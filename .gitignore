@@ -1,3 +1,4 @@
+dumps/
 verilator/
 teste.cpp
 prog_128.hex
@@ -15,6 +16,7 @@ vsim.wlf
 vish_stacktrace.vstf
 tcl_stacktrace.txt
 
+*.swp
 *.bck
 *.bak
 *.vcd
@@ -28,12 +30,6 @@ transcript
 work/
 *.swp
 
-RISCUIN_Quartus.*
-!RISCUIN_Quartus.htm
-!RISCUIN_Quartus.qpf
-!RISCUIN_Quartus.qsf
-!RISCUIN_Quartus.sdc
-!RISCUIN_Quartus.v
 db/
 incremental_db/
 # Prerequisites
@@ -65,6 +61,7 @@ incremental_db/
 *.lib
 
 # Executables
+./examples
 *.exe
 *.out
 *.app
@@ -72,7 +69,6 @@ incremental_db/
 serv_req_info.txt
 
 # Outros arquivos a serem temporáriamente ignorados por hora
-*Quartus*
 *.blif
 *.dot
 *.gtkw
@@ -80,7 +76,13 @@ serv_req_info.txt
 *.png
 
 
+impl/
+
 ## Arquivos do Xilinx ISE
 xise/tmp
 xise/iseconfig/
+
+
+## GoWin files
+RISCuin_TangNano.gprj.user
 
