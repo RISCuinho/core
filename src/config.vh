@@ -8,6 +8,11 @@
 `endif 
 
 `ifdef SIMULATOR
+`define MEMORY_PROG_32  "./memory/prog_32.hex"
+`define MEMORY_PROG_64  "./memory/prog_64.hex"
+`define MEMORY_PROG_128 "./memory/prog_128.hex"
+`define MEMORY_PROG_256 "./memory/prog_256.hex"
+
 `define DBC_USE_BUSY FALSE
 `define MEM_DATA_ADDR_WIDTH 10
 `define MEM_DATA_WIDTH 32
@@ -30,6 +35,11 @@
 `define RISCUIN_WATCHDOG_RST      700 // CLOCKS PARA RESETAR O PROCESSADOR APÓS ELE TER INICIALIZADO
 `define RISCUIN_CLOCK_WAIT_FINISH 20  // CLOCKS PARA ESPERAR PARA FINISH DEPOIS DO SINAL DE HALT/PC_END/INTERNAL_RST/FINISH_RST
 `else
+`define MEMORY_PROG_32  "../memory/prog_32.hex"
+`define MEMORY_PROG_64  "../memory/prog_64.hex"
+`define MEMORY_PROG_128 "../memory/prog_128.hex"
+`define MEMORY_PROG_256 "../memory/prog_256.hex"
+
 `define MEM_DATA_ADDR_WIDTH 10
 `define MEM_DATA_WIDTH 32
 `define INTERNAL_DATA_WIDTH 32 

@@ -10,8 +10,12 @@ module DataMemory #(
 localparam SIZE = 2**ADDR_WIDTH;
 
 initial begin
+   `ifndef __YOSYS__
    $display("Memory Bank, memory word %0d bits, address width %0d bits, total words %0d", 
-                                                                           DATA_WIDTH, ADDR_WIDTH, SIZE);
+   `else
+   $display("Memory Bank, memory word %d bits, address width %d bits, total words %d", 
+   `endif
+             DATA_WIDTH, ADDR_WIDTH, SIZE);
 end
 reg [DATA_WIDTH-1:0] memory [0:SIZE];
 always @(posedge clk) begin
