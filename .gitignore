@@ -26,6 +26,7 @@ OBS
 build/
 transcript
 work/
+*.swp
 
 RISCUIN_Quartus.*
 !RISCUIN_Quartus.htm
@@ -81,3 +82,5 @@ serv_req_info.txt
 
 ## Arquivos do Xilinx ISE
 xise/tmp
+xise/iseconfig/
+

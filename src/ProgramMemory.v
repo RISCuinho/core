@@ -24,13 +24,13 @@ module ProgramMemory #(
                                                                            STEP, (STEP*8), INSTR_ADDR_WIDTH, SIZE);
       $display("Load prog_%0d.hex",SIZE);
       if(INSTR_ADDR_WIDTH == 5 )
-         $readmemh("./prog_32.hex", memory); // carrega um programa de referência   
+         $readmemh("../memory/prog_32.hex", memory); // carrega um programa de referência   
       else if(INSTR_ADDR_WIDTH == 6 )
-         $readmemh("./prog_64.hex", memory); // carrega um programa de referência   
+         $readmemh("../memory/prog_64.hex", memory); // carrega um programa de referência   
       else if(INSTR_ADDR_WIDTH == 7 )
-         $readmemh("./prog_128.hex", memory); // carrega um programa de referência   
+         $readmemh("../memory/prog_128.hex", memory); // carrega um programa de referência   
       else if(INSTR_ADDR_WIDTH == 8 )
-         $readmemh("./prog_254.hex", memory); // carrega um programa de referência   
+         $readmemh("../memory/prog_254.hex", memory); // carrega um programa de referência   
    end
 
    assign instr = memory[pc];  
