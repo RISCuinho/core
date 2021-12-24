@@ -77,3 +77,7 @@ serv_req_info.txt
 *.gtkw
 *.json
 *.png
+
+
+## Arquivos do Xilinx ISE
+xise/tmp
