@@ -8,6 +8,9 @@ module RegisterBank #(
    output     [REGISTER_WIDTH-1:0] rs1_data, rs2_data,
    input      [REGISTER_WIDTH-1:0] rd_data,
    output reg                      ready
+`ifdef RISCUIN_DUMP
+   ,input dump
+`endif
 );
 
 localparam SIZE = 2**BANK_WIDTH;
