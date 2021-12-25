@@ -67,6 +67,8 @@ incremental_db/
 
 serv_req_info.txt
 
+.vscode
+
 # Outros arquivos a serem temporáriamente ignorados por hora
 *.blif
 *.dot
