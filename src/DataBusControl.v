@@ -20,7 +20,7 @@ module DataBusControl (
 
 wire [31:0] local_data_out;
 
-reg local_busy;
+reg local_busy = 1'bx;
 reg local_rst;
 
 reg [31:0] memory [0:`DBC_RAM_SIZE];
@@ -80,7 +80,7 @@ end
 initial begin
    local_rst  <= 1'bx;
    busy       <= 1'bx;
-   local_busy <= 1'bx;
+   
    ready      <= 1'b1;
 end
 
@@ -113,11 +113,11 @@ always @(posedge clk) begin
          local_busy <= 1'b1;
          case (size_in)
             2'b10: // 32bits
-               memory[local_ram_addr_in] <= local_ram_addr_in;
+               memory[local_ram_addr_in] <= data_in;
             2'b01: // 16bits
-               memory[local_ram_addr_in] <= {memory[local_ram_addr_in][31:16],local_ram_addr_in[15:0]};
+               memory[local_ram_addr_in] <= {memory[local_ram_addr_in][31:16],data_in[15:0]};
             2'b00: // 8bits
-               memory[local_ram_addr_in] <= {memory[local_ram_addr_in][31:8],local_ram_addr_in[7:0]};
+               memory[local_ram_addr_in] <= {memory[local_ram_addr_in][31:8],data_in[7:0]};
          endcase
          $display("Memoria in 0h%08h <= 0h%08h", local_ram_addr_in, memory[local_ram_addr_in]);
       end

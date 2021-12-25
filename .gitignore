@@ -28,6 +28,7 @@ OBS
 build/
 transcript
 work/
+*.swp
 
 db/
 incremental_db/
@@ -77,6 +78,13 @@ serv_req_info.txt
 *.png
 
 
-// GoWin
-RISCuin_TangNano.gprj.user
 impl/
+
+## Arquivos do Xilinx ISE
+xise/tmp
+xise/iseconfig/
+
+
+## GoWin files
+RISCuin_TangNano.gprj.user
+

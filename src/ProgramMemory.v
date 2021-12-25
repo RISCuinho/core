@@ -40,7 +40,7 @@ module ProgramMemory #(
       else if(INSTR_ADDR_WIDTH == 7 )
          $readmemh(`MEMORY_PROG_128, memory); // carrega um programa de referência   
       else if(INSTR_ADDR_WIDTH == 8 )
-         $readmemh(`MEMORY_PROG_254, memory); // carrega um programa de referência   
+         $readmemh(`MEMORY_PROG_256, memory); // carrega um programa de referência   
    end
 
    assign instr = memory[pc];  

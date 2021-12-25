@@ -1,8 +1,8 @@
 [submodule "LibFPGA"]
-    path = lib/LibFPGA
-    url = https://github.com/RISCuinho/LibFPGA
+	path = lib/LibFPGA
+	url = https://github.com/RISCuinho/LibFPGA.git
    branch = main
 [submodule "memory"]
-    path = memory
-    url = https://github.com/RISCuinho/exemplos/
+	path = memory
+	url = https://github.com/RISCuinho/exemplos.git
    branch = main
