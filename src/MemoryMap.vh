@@ -5,7 +5,7 @@
 //`ifndef XILINX_ISIM
 //`define DBC_RAM_ADDR_WIDTH                            ($clog2(`DBC_RAM_END - `DBC_RAM_START+1))
 //`else
-`define DBC_RAM_ADDR_WIDTH                            9
+`define DBC_RAM_ADDR_WIDTH                            15
 //`endif
 
 `define DBC_RAM_GLASS_START                           32'h7ffff000
