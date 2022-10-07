@@ -3,7 +3,8 @@
 module InstructionDecoderRV32I (
    input  [31:0] instr,
 
-   output        branch, load_pc,
+   output        branch_sel, jump_sel,
+	output [ 2:0] branch_op,
 
    output [15:0] op_code,
    output        alu_sel,
@@ -159,7 +160,8 @@ assign alu_op = JAL    ||
                 XORI   ? `ALU_OP_XOR              :
 
                  5'b00000;       
-             
+
+assign branch_op = FN3;
  
 
 assign rd_sel       = TYPE_I || TYPE_IL ||
@@ -225,7 +227,7 @@ assign data_r        = TYPE_IL;
 
 assign unsigned_value = LBU || LHU || SLTIU; // no caso LBU e LHU fn3 tem o bit 2 igual a 1
 
-assign branch = TYPE_B;
-assign load_pc = TYPE_J || AUIPC;
+assign branch_sel = TYPE_B;
+assign jump_sel = TYPE_J || AUIPC;
 
 endmodule
