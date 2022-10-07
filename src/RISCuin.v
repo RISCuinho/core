@@ -17,26 +17,12 @@ initial begin
 end
 `endif
 
-localparam TYPE_B       = 7'b1100011;
-localparam TYPE_IJ      = 7'b1100111;
-localparam TYPE_J       = 7'b1101111;
-
-localparam JAL     = {7'b0000000, 3'b000, TYPE_J      }; // b0000-0000-0110-1111  h006F
-localparam JALR    = {7'b0000000, 3'b000, TYPE_IJ     }; // b0000-0000-0110-0111  h0067
-
-localparam BEQ     = {7'b0000000, 3'b000, TYPE_B      }; // b0000-0000-0110-0011  h0063
-localparam BNE     = {7'b0000000, 3'b001, TYPE_B      }; // b0000-0000-1110-0011  h00E3 
-localparam BLT     = {7'b0000000, 3'b100, TYPE_B      }; // b0000-0010-0110-0011  h0263
-localparam BGE     = {7'b0000000, 3'b101, TYPE_B      }; // b0000-0010-1110-0011  h02E3
-localparam BLTU    = {7'b0000000, 3'b110, TYPE_B      }; // b0000-0011-0110-0011  h0363
-localparam BGEU    = {7'b0000000, 3'b111, TYPE_B      }; // b0000-0011-1110-0011  h03E3
-
 wire rb_ready, alu_sel, bus_ready, bus_w, bus_r, bus_busy, unsigned_value;
 wire [1:0]  bus_size;
 
 wire local_rst = rst | ~rb_ready;
 
-wire branch, load_pc;
+wire branch_sel, jump_sel;
 
 wire reg_w;
 wire [4:0] rd_sel, rs1_sel, rs2_sel;
@@ -55,8 +41,10 @@ wire imm_rs2_sel;
 wire [`INSTR_ADDR_WIDTH-1:0] pc;
 `endif
 wire [`INSTR_ADDR_WIDTH-1:0] pc_plus, pc_next;
-wire [`INSTR_ADDR_WIDTH-1:0] pc_branch =  alu_out[`INSTR_ADDR_WIDTH-1:2];
+//wire [`INSTR_ADDR_WIDTH-1:0] pc_branch =  alu_out[`INSTR_ADDR_WIDTH-1:2];
 wire [`INSTR_ADDR_WIDTH+1:0] pc_ext = {pc,2'b00};
+
+// TODO: verificar se pc_end precisa ser vericado aqui, pc_end ´e um controle do PC, PC_enable controla o PC, acaba sendo redudante.
 wire pc_enable = !rst && bus_ready && rb_ready && !pc_end && !bus_busy;
 
 reg pgm;
@@ -67,18 +55,18 @@ initial begin
    //$monitor("Program Counter: %h",pc_ext);
 end
 
-wire [31:0] alu_A       = branch || load_pc ? {pc,2'b0}  : rs1_data;
+wire [31:0] alu_A       = branch_sel || jump_sel ? {pc,2'b0}  : rs1_data;
 wire [31:0] alu_B       = imm_rs2_sel       ? imm        : rs2_data;
 
-wire do_branch =  branch ?
-                     op_code == BEQ    ?         rs1_data  ==         rs2_data :
-                     op_code == BNE    ?         rs1_data  !=         rs2_data :
-                     op_code == BLT    ? $signed(rs1_data) <  $signed(rs2_data) :
-                     op_code == BGE    ? $signed(rs1_data) >  $signed(rs2_data) :
-                     op_code == BLTU   ?         rs1_data  <          rs2_data :
-                     op_code == BGEU   ?         rs1_data  >          rs2_data :
-                                                         1'b0:
-                                                         load_pc;
+BranchControlUnit bcu(
+							 .branch_sel(branch_sel), 
+							 .branch_op(branch_op), 
+							 .A(rs1_data), .B(rs2_data), 
+							 .branch_e(branch_e));
+							 
+
+wire do_branch =  branch_e || jump_sel;
+
 //   00 -> alu
 //   01 -> bus (data_eei é o dado processado do barramento)
 //   10 -> imm
@@ -119,7 +107,7 @@ assign data_eei = !unsigned_value    ?
 ProgramCountControlUnit #(.INSTR_ADDR_WIDTH(`INSTR_ADDR_WIDTH)) 
                      pccu(.clk(clk), .rst(local_rst), .E(pc_enable), 
                           .pc_src(do_branch), 
-                          .pc(pc), .pc_plus(pc_plus), .pc_branch(pc_branch), .pc_next(pc_next),
+                          .pc(pc), .pc_plus(pc_plus), .pc_branch(alu_out[`INSTR_ADDR_WIDTH-1:2]), .pc_next(pc_next),
                           .pc_end(pc_end)
                          );
 
@@ -135,8 +123,8 @@ ProgramMemory #(.INSTR_ADDR_WIDTH(`INSTR_ADDR_WIDTH))
    Decodificador de instruções RV32I básico.
  */
 InstructionDecoderRV32I id_rv32i(.instr(instr), 
-                        .op_code(op_code), .alu_op(alu_op),
-                        .alu_sel(alu_sel), .branch(branch), .load_pc(load_pc),
+                        .op_code(op_code), .alu_op(alu_op), .branch_op(branch_op),
+                        .alu_sel(alu_sel), .branch_sel(branch_sel), .jump_sel(jump_sel),
                         .rs1_sel(rs1_sel), .rs2_sel(rs2_sel), .rd_sel(rd_sel), 
                         .rd_data_sel(rd_data_sel),
                         .reg_w(reg_w),
