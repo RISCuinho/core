@@ -4,6 +4,14 @@
 
 ![RISCuinho](./docs/images/logos/RISCuinho-Logo.png)
 
+![visitors](https://visitor-badge.laobi.icu/badge?page_id=RISCuinho.core)
+[![License: CC BY-SA 4.0](https://img.shields.io/badge/License-CC_BY--SA_4.0-blue.svg)](https://creativecommons.org/licenses/by-sa/4.0/)
+![Language: Portuguese](https://img.shields.io/badge/Language-Portuguese-brightgreen.svg)
+![Verilog](https://img.shields.io/badge/Verilog-HDL-blue)
+![FPGA](https://img.shields.io/badge/FPGA-Gowin-green)
+![Toolchain](https://img.shields.io/badge/Toolchain-Opensource-orange)
+![Status](https://img.shields.io/badge/Status-Funcional-brightgreen)
+
 **RISC**uinho (Risquinho), in portuguese is a **small scratch** on the surface of something, and this represents the proposal of this project that starts in a very didactic way, doing the minimum necessary by scratching the surface of what can be done with a Core or multiple RISC Cores.
 
 This project is educational and aims at my study on microprocessors and to teach my introductory courses about microcontroller programming and architecture at [Arduino Minas (Curso Maker/Geringonça Maker Space)](https://facebook.com/CursoMaker). RISCuinho (Risquinho) will also be used for my RTOS studies when it is possible to multiply its core to simulate multicore microcontrollers.
